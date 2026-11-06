@@ -1,0 +1,61 @@
+/* LeftStack brand colors for the guide. Values match assets/css/tokens.css:
+   teal is the accent (interactive), navy is structure (header, headings). */
+
+:root,
+[data-md-color-scheme="default"] {
+	--md-primary-fg-color: #13315c;
+	--md-primary-fg-color--light: #9fb3d1;
+	--md-primary-fg-color--dark: #0b1f3a;
+	--md-primary-bg-color: #fff;
+	--md-primary-bg-color--light: #b9c9e0;
+	--md-accent-fg-color: #0d9488;
+	--md-accent-fg-color--transparent: rgb(13 148 136 / 10%);
+	--md-typeset-a-color: #0f766e;
+}
+
+[data-md-color-scheme="slate"] {
+	--md-primary-fg-color: #0b1f3a;
+	--md-primary-fg-color--light: #9fb3d1;
+	--md-primary-fg-color--dark: #07162a;
+	--md-primary-bg-color: #f7f7f7;
+	--md-primary-bg-color--light: #b9c9e0;
+	--md-accent-fg-color: #2dd4bf;
+	--md-accent-fg-color--transparent: rgb(45 212 191 / 10%);
+	--md-typeset-a-color: #2dd4bf;
+}
+
+/* Headings are navy in the light theme, as in the plugin. */
+[data-md-color-scheme="default"] .md-typeset h1,
+[data-md-color-scheme="default"] .md-typeset h2,
+[data-md-color-scheme="default"] .md-typeset h3 {
+	color: #13315c;
+}
+
+/* Notes and tips use the brand teal instead of Material's blue. */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+	border-color: #0d9488;
+}
+
+.md-typeset .note > .admonition-title,
+.md-typeset .note > summary {
+	background-color: rgb(13 148 136 / 10%);
+}
+
+.md-typeset .note > .admonition-title::before,
+.md-typeset .note > summary::before {
+	background-color: #0d9488;
+}
+
+/* Keep the header logo crisp at the header's height. */
+.md-header__button.md-logo img {
+	height: 1.6rem;
+	width: auto;
+}
+
+/* Material hides the logo below 1220px; keep the brand visible on narrow screens too. */
+@media screen and (max-width: 76.1875em) {
+	.md-header__button.md-logo {
+		display: block;
+	}
+}
