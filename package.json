@@ -1,0 +1,29 @@
+{
+  "name": "leftstack-financial-hub",
+  "version": "1.0.0",
+  "description": "Campaign finance tracking for Democratic campaigns and party organizations.",
+  "author": "LeftStack <chris@leftstack.com>",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:js": "wp-scripts lint-js",
+    "format": "wp-scripts format",
+    "env": "wp-env",
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy",
+    "seed": "wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") wp eval-file bin/seed.php"
+  },
+  "main": "src/admin/index.jsx",
+  "wp-scripts": {
+    "webpack-config": "webpack.config.js"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.0.0",
+    "@wordpress/env": "^10.0.0"
+  },
+  "dependencies": {
+    "lucide-react": "^1.11.0"
+  }
+}

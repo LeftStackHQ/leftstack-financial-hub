@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ruleset name="LeftStack Financial Hub" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+	<description>The full WordPress coding standard, plus PHP compatibility. Three rules are switched off, each with the reason below.</description>
+
+	<file>./includes</file>
+	<file>./admin</file>
+	<file>./leftstack-financial-hub.php</file>
+	<file>./uninstall.php</file>
+
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/dev/*</exclude-pattern>
+	<exclude-pattern>*/Financial-Hub/Financial-Hub/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg value="ps"/>
+
+	<config name="testVersion" value="8.0-"/>
+	<config name="minimum_wp_version" value="6.5"/>
+
+	<rule ref="WordPress">
+		<!-- Short ternaries (?:) are plain PHP 5.3+ and read well for "value or default". -->
+		<exclude name="Universal.Operators.DisallowShortTernary"/>
+		<!-- A REST callback must accept the request even when it does not read it. -->
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	</rule>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- WordPress requires uninstall.php to have exactly this name, so it cannot follow the class-file naming rule. -->
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>*/uninstall.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="lsfh"/>
+				<element value="LSFH"/>
+				<element value="leftstack_financial_hub"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="manage_lsfh"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="leftstack-financial-hub"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

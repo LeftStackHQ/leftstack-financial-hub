@@ -1,0 +1,36 @@
+site_name: Financial Hub guide
+site_description: A plain-language guide to LeftStack Financial Hub, the WordPress plugin for campaign finance.
+site_url: https://leftstackhq.github.io/leftstack-financial-hub/
+repo_url: https://github.com/LeftStackHQ/leftstack-financial-hub
+edit_uri: edit/main/docs/
+docs_dir: docs
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - content.action.edit
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+
+nav:
+  - Start here:
+      - Getting started: index.md
+      - Install the plugin: install.md
+      - First-time setup: setup.md
+  - Everyday tasks:
+      - Connect ActBlue: actblue.md
+      - Enter a donation: donations.md
+      - Enter an expense: expenses.md
+      - Record an in-kind contribution: inkind.md
+      - Tie your records to the bank: bank.md
+  - Filing:
+      - Before you file: before-you-file.md
+      - Export your state report: state-report.md
+  - Privacy:
+      - Privacy and donor records: privacy.md

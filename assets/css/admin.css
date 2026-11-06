@@ -1,0 +1,3841 @@
+/* ══════════════════════════════════════════════════════════════
+   LeftStack Financial Hub — Admin UI
+   Scoped to #lsfh-app. Tokens: assets/css/tokens.css
+══════════════════════════════════════════════════════════════ */
+
+/* This stylesheet is only enqueued on Financial Hub pages.
+   Hide third-party plugin notices visually so they don't clutter
+   the interface — WP core hooks still fire (security/update notices
+   remain registered and accessible on non-LSFH pages). */
+#wpbody-content > .notice,
+#wpbody-content > .updated,
+#wpbody-content > .update-nag,
+#wpbody-content > .error {
+	display: none !important;
+}
+
+#lsfh-app {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+	font-size: var(--fs-base);
+	line-height: 1.5;
+	color: var(--ink);
+	background: var(--bg);
+	margin: -10px -20px 0 -20px;
+	min-height: calc(100vh - 32px);
+	display: flex;
+	flex-direction: column;
+}
+
+#lsfh-app *,
+#lsfh-app *::before,
+#lsfh-app *::after {
+	box-sizing: border-box;
+}
+
+/* ─── Checkboxes ──────────────────────────────────────────── */
+#lsfh-app input[type="checkbox"],
+#lsfh-modal input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px;
+	max-width: 16px;
+	padding: 0 !important;
+	border: 1.5px solid var(--border);
+	border-radius: var(--radius-xs);
+	background: var(--white);
+	cursor: pointer;
+	flex-shrink: 0;
+	align-self: center;
+	transition: background var(--tx), border-color var(--tx);
+	vertical-align: middle;
+}
+
+#lsfh-app input[type="checkbox"]:checked,
+#lsfh-modal input[type="checkbox"]:checked {
+	background: var(--p);
+	border-color: var(--p);
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpolyline points='1.5,6.5 4.5,9.5 10.5,2.5' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 10px 10px;
+}
+
+#lsfh-app input[type="checkbox"]:hover:not(:checked),
+#lsfh-modal input[type="checkbox"]:hover:not(:checked) {
+	border-color: var(--p);
+}
+
+#lsfh-app img {
+	max-width: 100%;
+	height: auto;
+}
+
+#lsfh-app h1,
+#lsfh-app h2,
+#lsfh-app h3,
+#lsfh-app h4 {
+	font-family: inherit !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: none !important;
+	font-weight: 700;
+}
+
+/* WP admin colours links #3858E9; without this any unstyled link inside the
+   app inherits it. Harmless today only because every child sets its own
+   colour — the stat cards are anchors and compute to WP blue. */
+#lsfh-app a {
+	text-decoration: none !important;
+	color: inherit;
+}
+
+#lsfh-app input,
+#lsfh-app select,
+#lsfh-app textarea,
+#lsfh-app button {
+	font-family: inherit;
+}
+
+/* ─── Header ──────────────────────────────────────────────── */
+#lsfh-app .lsfh-header {
+	background: var(--white);
+	height: 56px;
+	min-height: 56px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 28px;
+	flex-shrink: 0;
+	border-bottom: 1px solid var(--border);
+	box-shadow: var(--shadow-xs);
+}
+
+#lsfh-app .lsfh-header-left {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-header-icon {
+	height: 26px;
+	width: auto;
+	display: block;
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-header-title {
+	font-size: var(--fs-xl);
+	font-weight: 700;
+	color: var(--ink);
+	white-space: nowrap;
+	flex-shrink: 0;
+	letter-spacing: -0.01em;
+}
+
+#lsfh-app .lsfh-header-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-header-btn {
+	background: var(--p);
+	border: none;
+	border-radius: var(--radius);
+	color: #fff;
+	font-size: var(--fs-base);
+	font-weight: 600;
+	padding: 8px 16px;
+	cursor: pointer;
+	white-space: nowrap;
+	text-decoration: none !important;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	transition: background var(--tx), box-shadow var(--tx), transform 0.1s var(--ease);
+	box-shadow: 0 1px 4px rgba(13, 148, 136, 0.4);
+}
+
+#lsfh-app .lsfh-header-btn:hover {
+	background: var(--p-dk);
+	color: #fff !important;
+	box-shadow: 0 2px 8px rgba(13, 148, 136, 0.45);
+	transform: translateY(-1px);
+}
+
+#lsfh-app .lsfh-header-btn:active {
+	transform: translateY(0);
+}
+
+/* ─── Nav ─────────────────────────────────────────────────── */
+#lsfh-app .lsfh-nav {
+	background: var(--white);
+	border-bottom: 1px solid var(--border);
+	display: flex;
+	overflow-x: auto;
+	padding: 0 25px;
+	flex-shrink: 0;
+	scrollbar-width: none;
+}
+
+#lsfh-app .lsfh-nav::-webkit-scrollbar {
+	display: none;
+}
+
+#lsfh-app .lsfh-nav a {
+	display: inline-flex;
+	align-items: center;
+	padding: 12px 14px 11px;
+	font-size: var(--fs-cmp);
+	font-weight: 600;
+	color: var(--muted) !important;
+	border-bottom: 2px solid transparent;
+	white-space: nowrap;
+	margin-bottom: -1px;
+	transition: color 0.12s var(--ease), border-color 0.12s var(--ease);
+}
+
+#lsfh-app .lsfh-nav a:hover {
+	color: var(--p) !important;
+}
+
+#lsfh-app .lsfh-nav a.active {
+	color: var(--p) !important;
+	border-bottom-color: var(--p);
+}
+
+/* ─── Body ────────────────────────────────────────────────── */
+#lsfh-app .lsfh-body {
+	flex: 1;
+	padding: var(--space-6) var(--space-7);
+	overflow: auto;
+}
+
+/* ─── Stat cards ──────────────────────────────────────────── */
+#lsfh-app .lsfh-stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: var(--space-4);
+	margin-bottom: var(--space-4);
+}
+
+a.lsfh-stat:hover {
+	border-color: var(--p);
+	box-shadow: var(--shadow-md);
+	transform: translateY(-1px);
+}
+
+a.lsfh-stat:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}
+
+#lsfh-app .lsfh-stat {
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: var(--space-5);
+	box-shadow: var(--shadow-xs);
+	transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+#lsfh-app .lsfh-stat:hover {
+	box-shadow: var(--shadow-md);
+	transform: translateY(-1px);
+}
+
+#lsfh-app .lsfh-stat-icon {
+	width: 38px;
+	height: 38px;
+	border-radius: var(--radius-lg);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 14px;
+}
+
+#lsfh-app .lsfh-stat-icon.teal {
+	background: var(--p-xlt);
+	color: var(--p-icon);
+}
+
+#lsfh-app .lsfh-stat-icon.green {
+	background: var(--emerald-50);
+	color: var(--success);
+}
+
+#lsfh-app .lsfh-stat-icon.red {
+	background: var(--alert-xlt);
+	color: var(--alert-icon);
+}
+
+#lsfh-app .lsfh-stat-icon.gold {
+	background: var(--gold-lt);
+	color: var(--gold-icon);
+}
+
+#lsfh-app .lsfh-stat-label {
+	font-size: var(--fs-micro);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	color: var(--muted);
+	margin-bottom: 6px;
+}
+
+#lsfh-app .lsfh-stat-num {
+	font-size: var(--fs-3xl);
+	font-weight: 800;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+	margin-bottom: 6px;
+	letter-spacing: -0.02em;
+}
+
+#lsfh-app .lsfh-stat-num.money {
+	font-size: var(--fs-3xl);
+}
+
+#lsfh-app .lsfh-stat-num.alert {
+	color: var(--alert);
+}
+
+#lsfh-app .lsfh-stat-num.positive {
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-stat-sub {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	line-height: 1.4;
+}
+
+/* ─── Balance bar (Dashboard hero) ───────────────────────── */
+#lsfh-app .lsfh-balance-card {
+	background: linear-gradient(160deg, var(--teal-50) 0%, var(--white) 45%);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: var(--space-6);
+	box-shadow: var(--shadow-xs), 0 8px 24px rgba(13, 148, 136, 0.06);
+	margin-bottom: var(--space-5);
+}
+
+#lsfh-app .lsfh-balance-row {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: var(--space-4);
+	align-items: end;
+	margin-bottom: var(--space-5);
+}
+
+#lsfh-app .lsfh-balance-label {
+	font-size: var(--fs-micro);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	color: var(--muted);
+	margin-bottom: 5px;
+}
+
+#lsfh-app .lsfh-balance-value {
+	font-size: var(--fs-3xl);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+	line-height: 1;
+}
+
+#lsfh-app .lsfh-balance-value.positive {
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-balance-value.negative {
+	color: var(--alert);
+}
+
+#lsfh-app .lsfh-balance-sub {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	margin-top: 3px;
+}
+
+#lsfh-app .lsfh-balance-op {
+	font-size: var(--fs-3xl);
+	font-weight: 300;
+	color: var(--subtle);
+	display: flex;
+	align-items: flex-end;
+	padding-bottom: 4px;
+	justify-content: center;
+}
+
+#lsfh-app .lsfh-goal-track {
+	width: 100%;
+	height: 8px;
+	background: rgba(13, 148, 136, 0.12);
+	border-radius: var(--radius-full);
+	overflow: hidden;
+	margin-bottom: 6px;
+}
+
+#lsfh-app .lsfh-goal-fill {
+	height: 100%;
+	border-radius: var(--radius-full);
+	background: linear-gradient(90deg, var(--p), var(--teal-400));
+	transition: width 0.6s var(--ease);
+}
+
+#lsfh-app .lsfh-goal-labels {
+	display: flex;
+	justify-content: space-between;
+	font-size: var(--fs-sm);
+	color: var(--muted);
+}
+
+/* Scheduled payments strip under the goal bar */
+#lsfh-app .lsfh-scheduled {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-3);
+	margin-top: var(--space-4);
+	padding-top: var(--space-3);
+	border-top: 1px solid var(--border);
+	font-size: var(--fs-lg, 0.875rem);
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-scheduled-main {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#lsfh-app .lsfh-scheduled-main svg {
+	color: var(--gold-dk);
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-scheduled-after {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-scheduled-after .lsfh-bold {
+	font-size: 1.125rem;
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-scheduled-after .lsfh-scheduled-neg {
+	color: var(--alert);
+}
+
+/* ─── Dash grid ───────────────────────────────────────────── */
+#lsfh-app .lsfh-dash-grid {
+	display: grid;
+	grid-template-columns: 1fr 320px;
+	gap: var(--space-4);
+	margin-bottom: var(--space-4);
+}
+
+/* ─── Top Contributions table ────────────────────────────── */
+#lsfh-app .lsfh-contrib-scroll {
+	overflow-x: auto;
+}
+
+/* Avatar */
+#lsfh-app .lsfh-contrib-avatar {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--fs-sm);
+	font-weight: 700;
+	background: var(--p-xlt);
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-contrib-avatar.near {
+	background: var(--gold-lt);
+	color: var(--gold-dk);
+}
+
+#lsfh-app .lsfh-contrib-avatar.maxed {
+	background: var(--alert-lt);
+	color: var(--alert-dk);
+}
+
+/* Rank */
+#lsfh-app .lsfh-cc-rank {
+	text-align: center;
+	font-size: var(--fs-micro);
+	font-weight: 700;
+	color: var(--subtle);
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-cc-rank.top {
+	color: var(--p);
+}
+
+/* Donor name / occupation */
+#lsfh-app .lsfh-cc-donor-name {
+	font-weight: 600;
+	color: var(--ink);
+	font-size: var(--fs-lg);
+}
+
+#lsfh-app .lsfh-cc-donor-loc {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	margin-top: 1px;
+}
+
+/* Address / date / total */
+#lsfh-app .lsfh-cc-address {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	line-height: 1.4;
+}
+
+#lsfh-app .lsfh-cc-date {
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-cc-total {
+	font-weight: 700;
+	color: var(--p);
+	white-space: nowrap;
+	font-size: var(--fs-lg);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Links / empty */
+#lsfh-app .lsfh-cc-cell-link {
+	font-size: var(--fs-sm);
+	color: var(--p);
+	text-decoration: none;
+	white-space: nowrap;
+	display: block;
+}
+
+#lsfh-app .lsfh-cc-cell-link:hover {
+	text-decoration: underline;
+}
+
+#lsfh-app .lsfh-cc-cell-empty {
+	font-size: var(--fs-sm);
+	color: var(--subtle);
+}
+
+/* Limit column + bars */
+#lsfh-app .lsfh-cc-limit {
+	min-width: 140px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+#lsfh-app .lsfh-cc-limit-hdr {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 3px;
+}
+
+#lsfh-app .lsfh-cc-limit-label {
+	font-size: var(--fs-micro);
+	color: var(--subtle);
+	font-weight: 600;
+}
+
+#lsfh-app .lsfh-cc-limit-val {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-cc-limit-val.near {
+	color: var(--gold);
+	font-weight: 600;
+}
+
+#lsfh-app .lsfh-cc-bar-track {
+	height: 4px;
+	border-radius: var(--radius-full);
+	background: var(--border);
+	overflow: hidden;
+}
+
+#lsfh-app .lsfh-cc-bar-fill {
+	height: 100%;
+	border-radius: var(--radius-full);
+	background: var(--p);
+}
+
+#lsfh-app .lsfh-cc-bar-fill.near {
+	background: var(--gold-icon);
+}
+
+#lsfh-app .lsfh-cc-bar-fill.maxed {
+	background: var(--alert);
+}
+
+/* ─── Boxes ───────────────────────────────────────────────── */
+#lsfh-app .lsfh-box {
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+	box-shadow: var(--shadow-sm);
+}
+
+/* Card header. A white surface with a hairline rule, not a filled bar: WP's
+   own chrome (admin bar + 160px sidebar, both rgb(30,30,30) here) already
+   frames this UI, so a second filled bar butts against it and competes.
+   Navy carries the heading as TYPE instead — same palette, no rival surface,
+   and it keeps the teal table header directly below as the one deliberate
+   coloured surface in the plugin. --s on white is 12.95:1. */
+#lsfh-app .lsfh-box-header {
+	background: var(--white);
+	border-bottom: 1px solid var(--border);
+	padding: 14px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#lsfh-app .lsfh-box-title {
+	font-size: var(--fs-lg) !important;
+	font-weight: 700 !important;
+	color: var(--s) !important;
+	letter-spacing: -0.01em;
+}
+
+/* ─── Tables ──────────────────────────────────────────────── */
+#lsfh-app .lsfh-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--fs-base);
+}
+
+/* Quiet header: light slate with muted uppercase labels, so the data carries
+   the colour. --muted on --bg is 4.6:1, which passes WCAG AA for this small
+   text. The solid background also keeps the sticky header opaque when rows
+   scroll beneath it inside .lsfh-tscroll. */
+#lsfh-app .lsfh-table thead th {
+	background: var(--bg);
+	color: var(--muted);
+	font-size: var(--fs-micro);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	padding: 10px 16px;
+	border-bottom: 1px solid var(--border);
+	text-align: left;
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-table tbody td {
+	padding: 11px 16px;
+	border-bottom: 1px solid var(--border-lt);
+	vertical-align: middle;
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+#lsfh-app .lsfh-table tbody tr:hover td {
+	background: var(--bg) !important;
+}
+
+/* ─── Amount cells ────────────────────────────────────────── */
+#lsfh-app .lsfh-amount {
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	font-size: var(--fs-lg);
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-amount.positive {
+	color: var(--p-dk);
+}
+
+#lsfh-app .lsfh-amount.negative {
+	color: var(--alert);
+}
+
+#lsfh-app .lsfh-amount-fee {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	font-weight: 400;
+}
+
+/* ─── Source badges ───────────────────────────────────────── */
+#lsfh-app .badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 3px 10px;
+	border-radius: var(--radius-full);
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+#lsfh-app .badge-teal {
+	background: var(--p-lt);
+	color: var(--p-dk);
+}
+
+#lsfh-app .badge-green {
+	background: var(--green-lt);
+	color: var(--green);
+}
+
+#lsfh-app .badge-red {
+	background: var(--alert-lt);
+	color: var(--alert-dk);
+}
+
+#lsfh-app .badge-gold {
+	background: var(--gold-lt);
+	color: var(--gold-dk);
+}
+
+#lsfh-app .badge-slate {
+	background: var(--border-lt);
+	color: var(--slate);
+}
+
+/* Quiet neutrals, not purple/blue (off-palette) and not brand navy either.
+   A payment method is a label, not an action or a state, and colour is
+   reserved for those two. Every badge renders its own text ("Stripe",
+   "Check"), so nothing is lost. 9.4:1 and 8.3:1. */
+#lsfh-app .badge-purple {
+	background: var(--border-lt);
+	color: var(--slate);
+}
+
+#lsfh-app .badge-blue {
+	background: var(--border);
+	color: var(--slate);
+}
+
+#lsfh-app .badge-xs {
+	font-size: var(--fs-micro);
+	padding: 1px 6px;
+}
+
+/* ─── Alert box (warning notice block) ───────────────────── */
+#lsfh-app .lsfh-alert-box {
+	background: var(--alert-lt);
+	border: 1px solid var(--alert-icon);
+	border-radius: var(--radius);
+	padding: 10px 14px;
+	margin-bottom: var(--space-4);
+	font-size: var(--fs-lg);
+	color: var(--alert);
+}
+
+/* ─── Limit warning badges ────────────────────────────────── */
+
+/* Visually hidden, still announced. For status cells that convey meaning
+   through an icon alone — the icon's SVG is aria-hidden, so without a text
+   companion a screen reader announces nothing at all, and the *positive*
+   state ends up the silent one (the negative state at least renders "—"). */
+#lsfh-app .lsfh-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Inline "+ Add" affordance for a cell whose value is still outstanding.
+   Matches the muted look of the existing "+ Add date" / "+ Add reference"
+   spans, but as a real <button> since it opens a modal rather than
+   starting an inline edit — native semantics beat role="button". */
+#lsfh-app .lsfh-add-inline {
+	background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	font-size: var(--fs-cmp);
+	color: var(--subtle);
+	cursor: pointer;
+}
+
+#lsfh-app .lsfh-add-inline:hover {
+	color: var(--p);
+	text-decoration: underline;
+}
+
+#lsfh-app .lsfh-add-inline:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+	border-radius: var(--radius-xs);
+}
+
+/* Who pays a deposit out, as a small subtitle under its id. A deposit with
+   no name shows the prompt only when its row is hovered or the button is
+   focused. */
+#lsfh-app .lsfh-processor {
+	display: block;
+	margin-top: 2px;
+	font-size: var(--fs-sm);
+}
+
+#lsfh-app .lsfh-processor--add {
+	opacity: 0;
+}
+
+#lsfh-app tr:hover .lsfh-processor--add,
+#lsfh-app .lsfh-processor--add:focus-visible {
+	opacity: 1;
+}
+
+#lsfh-app .lsfh-processor-input {
+	width: 160px;
+	margin-top: 2px;
+	padding: 2px 6px;
+	font-size: var(--fs-cmp);
+}
+
+/* One match in the refund form's "Find the original" search: the gift on one
+   line, with a warning under it when another gift looks the same. */
+#lsfh-app .lsfh-original-result {
+	margin-top: 6px;
+	padding: 6px 8px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-app .lsfh-original-match {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+#lsfh-app .lsfh-original-match .btn {
+	margin-left: auto;
+}
+
+/* Column-visibility toggle rows inside the Columns dropdown. */
+#lsfh-app .lsfh-col-toggle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 2px;
+	font-size: var(--fs-base);
+	color: var(--ink);
+	cursor: pointer;
+	user-select: none;
+}
+
+#lsfh-app .lsfh-col-toggle:hover {
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-col-toggle input[disabled] {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+#lsfh-app .lsfh-col-toggle:has(input[disabled]) {
+	cursor: not-allowed;
+	color: var(--subtle);
+}
+
+/* ─── Typography utilities ────────────────────────────────── */
+#lsfh-app .lsfh-meta {
+	font-size: var(--fs-base);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-meta-sm {
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-meta-xs {
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-label-xs {
+	font-size: var(--fs-micro);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-nowrap {
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-bold {
+	font-weight: 700;
+}
+
+#lsfh-app .lsfh-muted {
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-subtle {
+	color: var(--subtle);
+}
+
+#lsfh-app .lsfh-ink {
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-primary {
+	color: var(--p);
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+#lsfh-app .btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	padding: 7px 16px;
+	border-radius: var(--radius);
+	font-size: var(--fs-base);
+	font-weight: 600;
+	cursor: pointer;
+	border: 1px solid transparent;
+	line-height: 1.4;
+	transition: background 0.12s var(--ease), box-shadow 0.12s var(--ease), transform 0.1s var(--ease), border-color 0.12s var(--ease);
+	font-family: inherit;
+	text-decoration: none !important;
+	white-space: nowrap;
+}
+
+#lsfh-app .btn:active {
+	transform: translateY(1px) !important;
+}
+
+#lsfh-app .btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none !important;
+}
+
+#lsfh-app .btn-primary {
+	background: var(--p);
+	color: #fff !important;
+	border-color: var(--p-dk);
+	box-shadow: 0 1px 2px rgba(13, 148, 136, 0.25);
+}
+
+#lsfh-app .btn-primary:hover {
+	background: var(--p-dk);
+	color: #fff !important;
+	box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+	transform: translateY(-1px);
+}
+
+#lsfh-app .btn-ghost {
+	background: var(--white);
+	color: var(--slate) !important;
+	border-color: var(--border);
+	font-weight: 500;
+	box-shadow: var(--shadow-xs);
+}
+
+#lsfh-app .btn-ghost:hover {
+	background: var(--bg);
+	color: var(--ink) !important;
+	border-color: var(--border-md);
+}
+
+#lsfh-app .btn-danger {
+	background: var(--alert);
+	color: #fff !important;
+	border-color: var(--req);
+}
+
+#lsfh-app .btn-danger:hover {
+	background: var(--req);
+	color: #fff !important;
+}
+
+#lsfh-app .btn-sm {
+	padding: 4px 12px !important;
+	font-size: var(--fs-cmp) !important;
+	border-radius: var(--radius-sm) !important;
+}
+
+#lsfh-app .lsfh-icon-btn {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--muted);
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--radius-sm);
+	transition: background 0.1s var(--ease), color 0.1s var(--ease);
+}
+
+#lsfh-app .lsfh-icon-btn:hover {
+	background: var(--bg);
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-icon-btn-danger:hover {
+	background: var(--alert-lt);
+	color: var(--alert);
+}
+
+/* ─── Toolbar ─────────────────────────────────────────────── */
+#lsfh-app .lsfh-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	align-items: center;
+	margin-bottom: var(--space-4);
+}
+
+#lsfh-app .lsfh-toolbar-right {
+	margin-left: auto;
+	display: flex;
+	gap: var(--space-2);
+	align-items: center;
+}
+
+/* Two-row toolbar variant: search+actions on row 1, filters on row 2 */
+#lsfh-app .lsfh-toolbar--rows {
+	flex-direction: column;
+	align-items: stretch;
+	gap: var(--space-2);
+}
+
+#lsfh-app .lsfh-toolbar-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	align-items: center;
+}
+
+#lsfh-app .lsfh-toolbar-row .lsfh-toolbar-right {
+	margin-left: auto;
+}
+
+/* Applied-filter chips sit on their own strip directly above the table, so
+   what is currently filtering the view is visible without opening anything. */
+#lsfh-app .lsfh-filter-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	align-items: center;
+	margin-bottom: var(--space-3);
+}
+
+/* ─── Tab bar (sub-tabs within a page) ───────────────────── */
+#lsfh-app .lsfh-tabs {
+	display: flex;
+	border-bottom: 2px solid var(--border);
+	margin-bottom: var(--space-5);
+	gap: 2px;
+}
+
+#lsfh-app .lsfh-tab {
+	background: none;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -2px;
+	border-radius: 2px 2px 0 0;
+	padding: 8px 18px;
+	font-size: var(--fs-lg);
+	font-weight: 600;
+	color: var(--muted);
+	cursor: pointer;
+	font-family: inherit;
+	transition: color 0.12s var(--ease), border-color 0.12s var(--ease);
+}
+
+#lsfh-app .lsfh-tab:hover {
+	color: var(--p);
+	border-bottom-color: var(--border-md);
+}
+
+#lsfh-app .lsfh-tab.active {
+	color: var(--p) !important;
+	border-bottom-color: var(--p) !important;
+}
+
+#lsfh-app .lsfh-tabs--sub {
+	margin-top: calc(var(--space-3) * -1);
+	margin-bottom: var(--space-4);
+	border-bottom-color: var(--border);
+}
+
+#lsfh-app .lsfh-tabs--sub .lsfh-tab {
+	font-size: var(--fs-cmp);
+	padding: 6px 14px;
+	font-weight: 500;
+}
+
+#lsfh-app .lsfh-tabs--page {
+	margin-bottom: var(--space-6);
+}
+
+#lsfh-app .lsfh-tab-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--bg);
+	color: var(--muted);
+	font-size: var(--fs-micro);
+	font-weight: 700;
+	border-radius: var(--radius-full);
+	padding: 1px 6px;
+	min-width: 18px;
+	margin-left: 4px;
+}
+
+
+/* ─── Form fields ─────────────────────────────────────────── */
+#lsfh-app input.lsfh-input,
+#lsfh-app select.lsfh-input,
+#lsfh-app textarea.lsfh-input {
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 7px 12px;
+	font-size: var(--fs-base);
+	background: var(--white);
+	color: var(--ink);
+	font-family: inherit;
+	outline: none;
+	transition: border-color var(--tx), box-shadow var(--tx);
+	box-shadow: var(--shadow-xs);
+}
+
+#lsfh-app input.lsfh-input:focus,
+#lsfh-app select.lsfh-input:focus,
+#lsfh-app textarea.lsfh-input:focus {
+	border-color: var(--focus);
+	box-shadow: var(--ring);
+}
+
+#lsfh-app button.lsfh-input.lsfh-filter-active {
+	border-color: var(--p);
+	background: var(--p-xlt);
+	color: var(--p-dk);
+}
+
+#lsfh-app button.lsfh-input {
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-xs);
+}
+
+/* Height lock — prevents WP admin base styles from inflating inputs/selects
+   across WP versions. textarea is intentionally excluded (auto-height). */
+#lsfh-app input.lsfh-input,
+#lsfh-app select.lsfh-input {
+	height: 34px !important;
+	min-height: 34px !important;
+	max-height: 34px !important;
+	line-height: 20px !important;
+	vertical-align: middle;
+}
+
+#lsfh-app .lsfh-section-hdr {
+	font-size: var(--fs-micro) !important;
+	font-weight: 700 !important;
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	color: var(--muted) !important;
+	padding-bottom: 8px !important;
+	border-bottom: 1px solid var(--border) !important;
+	margin-bottom: var(--space-4) !important;
+	margin-top: var(--space-6) !important;
+}
+
+#lsfh-app .lsfh-section-hdr:first-child {
+	margin-top: 0 !important;
+}
+
+#lsfh-app .lsfh-two-col {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 14px;
+}
+
+#lsfh-app .lsfh-three-col {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 14px;
+}
+
+#lsfh-app .lsfh-field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin-bottom: 14px;
+}
+
+#lsfh-app .lsfh-field label {
+	font-size: var(--fs-cmp);
+	font-weight: 600;
+	color: var(--slate);
+}
+
+#lsfh-app .lsfh-field input,
+#lsfh-app .lsfh-field select,
+#lsfh-app .lsfh-field textarea {
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 7px 12px;
+	font-size: var(--fs-base);
+	color: var(--ink);
+	background: var(--white);
+	font-family: inherit;
+	outline: none;
+	transition: border-color var(--tx), box-shadow var(--tx);
+	box-shadow: var(--shadow-xs);
+	width: 100%;
+}
+
+#lsfh-app .lsfh-field input:focus,
+#lsfh-app .lsfh-field select:focus,
+#lsfh-app .lsfh-field textarea:focus {
+	border-color: var(--focus);
+	box-shadow: var(--ring);
+}
+
+/* Dropdown arrow for selects.
+   WP admin gives selects `appearance: none` plus its own arrow as a
+   background-image, but both .lsfh-input and .lsfh-field set
+   `background: var(--white)` — a shorthand, which resets background-image
+   to none. So WP's arrow was wiped and nothing replaced it, leaving every
+   select with no affordance while the popover buttons beside them (All
+   dates, More, Columns) kept their ChevronDown.
+
+   This must sit AFTER both of those rules: it has equal specificity to
+   `.lsfh-field select`, so source order is what stops the shorthand
+   clobbering it again. Matches lucide's chevron-down — 2px stroke, round
+   caps, --muted — so the native and custom controls agree. */
+#lsfh-app select.lsfh-input,
+#lsfh-app .lsfh-field select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 9px center;
+	background-size: 12px 12px;
+	padding-right: 28px;
+}
+
+#lsfh-app select.lsfh-input:disabled,
+#lsfh-app .lsfh-field select:disabled {
+	opacity: 0.6;
+}
+
+#lsfh-app .lsfh-field .hint {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+}
+
+#lsfh-app .req {
+	color: var(--req);
+}
+
+#lsfh-app .lsfh-edit-footer {
+	display: flex;
+	gap: var(--space-2);
+	align-items: center;
+	flex-wrap: wrap;
+	padding-top: 14px;
+	border-top: 1px solid var(--border);
+	margin-top: 8px;
+}
+
+#lsfh-app .form-msg {
+	display: inline-block;
+	margin-left: 8px;
+	font-size: var(--fs-cmp);
+	font-weight: 500;
+}
+
+#lsfh-app .lsfh-check-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	font-size: var(--fs-base);
+	cursor: pointer;
+}
+
+/* ─── Bulk bar (defined fully in the Bulk action bar block below) ─── */
+
+/* ─── Pagination ──────────────────────────────────────────── */
+#lsfh-app .lsfh-pagination {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 14px;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+}
+
+#lsfh-app .lsfh-pagination-info {
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+	padding: 0 8px;
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-pagination .btn:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+
+/* ─── Table totals bar ────────────────────────────────────── */
+#lsfh-app .lsfh-table-totals {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4);
+	flex-wrap: wrap;
+	margin-top: var(--space-3);
+	padding: var(--space-3) var(--space-4);
+	background: var(--white);
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow-xs);
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-totals-stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2) var(--space-8);
+	align-items: flex-end;
+}
+
+#lsfh-app .lsfh-totals-stat {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 2px;
+}
+
+#lsfh-app .lsfh-totals-label {
+	font-size: var(--fs-micro);
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-totals-value {
+	font-size: var(--fs-xl);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-totals-stat--positive .lsfh-totals-value {
+	color: var(--p-dk);
+}
+
+#lsfh-app .lsfh-totals-stat--alert .lsfh-totals-value {
+	color: var(--alert);
+}
+
+#lsfh-app .lsfh-totals-stat--warn .lsfh-totals-value {
+	color: var(--gold-dk);
+}
+
+@media (max-width: 700px) {
+
+	#lsfh-app .lsfh-totals-stats {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-3) var(--space-4);
+	}
+
+	#lsfh-app .lsfh-totals-stat {
+		align-items: flex-start;
+	}
+}
+
+/* ─── Name cell ───────────────────────────────────────────── */
+#lsfh-app .lsfh-name-cell {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+#lsfh-app .lsfh-avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--p-lt);
+	color: var(--p-dk);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--fs-micro);
+	font-weight: 800;
+	flex-shrink: 0;
+	text-transform: uppercase;
+}
+
+#lsfh-app .lsfh-name-main {
+	font-weight: 600;
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-name-sub {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	margin-top: 1px;
+}
+
+/* ─── Receipt cell ────────────────────────────────────────── */
+#lsfh-app .lsfh-receipt-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: var(--p);
+	font-size: var(--fs-cmp);
+	font-weight: 500;
+}
+
+#lsfh-app .lsfh-receipt-link:hover {
+	text-decoration: underline !important;
+}
+
+/* ─── Activity feed ───────────────────────────────────────── */
+#lsfh-app .lsfh-feed {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#lsfh-app .lsfh-feed li {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px 18px;
+	border-bottom: 1px solid var(--border-lt);
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-app .lsfh-feed li:last-child {
+	border-bottom: none;
+}
+
+#lsfh-app .lsfh-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	margin-top: 5px;
+}
+
+#lsfh-app .lsfh-dot.g {
+	background: var(--p);
+}
+
+#lsfh-app .lsfh-dot.gd {
+	background: var(--gold-icon);
+}
+
+#lsfh-app .lsfh-dot.r {
+	background: var(--alert);
+}
+
+#lsfh-app .lsfh-dot.s {
+	background: var(--border-md);
+}
+
+#lsfh-app .lsfh-feed-text {
+	color: var(--ink);
+	line-height: 1.5;
+}
+
+#lsfh-app .lsfh-feed-time {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	margin-top: 2px;
+}
+
+/* ─── Modal ───────────────────────────────────────────────── */
+#lsfh-modal-backdrop {
+	position: fixed;
+	inset: 0;
+	top: 32px;
+	background: rgba(0, 0, 0, 0.45);
+	z-index: 99999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	backdrop-filter: blur(2px);
+}
+
+#lsfh-modal-backdrop .lsfh-modal {
+	background: var(--white);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-lg);
+	padding: var(--space-6);
+	width: 100%;
+	max-width: 560px;
+	max-height: calc(100vh - 100px);
+	overflow-y: auto;
+	position: relative;
+}
+
+#lsfh-modal-backdrop .lsfh-modal.wide {
+	max-width: 720px;
+}
+
+#lsfh-modal-backdrop .lsfh-modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid var(--border);
+	font-size: var(--fs-xl);
+	font-weight: 700;
+	color: var(--ink);
+}
+
+#lsfh-modal-backdrop .lsfh-modal-body {
+	margin-bottom: 20px;
+}
+
+#lsfh-modal-backdrop .lsfh-modal-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--space-2);
+	padding-top: 14px;
+	border-top: 1px solid var(--border);
+}
+
+/* ─── Unitemized allocation preview ──────────────────────── */
+#lsfh-modal-backdrop .lsfh-alloc-preview {
+	display: flex;
+	gap: var(--space-3);
+	margin-top: var(--space-4);
+}
+
+#lsfh-modal-backdrop .lsfh-alloc-row {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	padding: var(--space-4);
+	border-radius: var(--radius);
+	border: 1px solid var(--border);
+}
+
+#lsfh-modal-backdrop .lsfh-alloc-row.unitemized {
+	background: var(--p-xlt);
+	border-color: var(--p-lt);
+}
+
+#lsfh-modal-backdrop .lsfh-alloc-row.itemized {
+	background: var(--bg);
+}
+
+#lsfh-modal-backdrop .lsfh-alloc-count {
+	font-size: var(--fs-4xl);
+	font-weight: 800;
+	line-height: 1;
+	color: var(--ink);
+}
+
+#lsfh-modal-backdrop .lsfh-alloc-label {
+	font-weight: 600;
+	font-size: var(--fs-lg);
+	color: var(--ink);
+}
+
+#lsfh-modal-backdrop .lsfh-alloc-sub {
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+	margin-top: 2px;
+}
+
+/* ─── Donor autofill lookup ───────────────────────────────── */
+#lsfh-modal-backdrop .lsfh-donor-lookup {
+	position: relative;
+	margin-bottom: 14px;
+}
+
+#lsfh-modal-backdrop .lsfh-donor-lookup-input {
+	width: 100%;
+	padding: 7px 12px;
+	font-size: var(--fs-base);
+	font-family: inherit;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--white);
+	color: var(--ink);
+	outline: none;
+	box-shadow: var(--shadow-xs);
+	transition: border-color var(--tx), box-shadow var(--tx);
+	box-sizing: border-box;
+}
+
+#lsfh-modal-backdrop .lsfh-donor-lookup-input:focus {
+	border-color: var(--focus);
+	box-shadow: var(--ring);
+}
+
+#lsfh-modal-backdrop .lsfh-donor-suggest {
+	position: absolute;
+	top: calc(100% + 4px);
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-md);
+	list-style: none;
+	margin: 0;
+	padding: 4px 0;
+	max-height: 260px;
+	overflow-y: auto;
+}
+
+#lsfh-modal-backdrop .lsfh-donor-suggest li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: var(--fs-base);
+	transition: background var(--tx);
+}
+
+#lsfh-modal-backdrop .lsfh-donor-suggest li:hover {
+	background: var(--p-xlt);
+}
+
+#lsfh-modal-backdrop .lsfh-suggest-name {
+	font-weight: 600;
+	color: var(--ink);
+	flex: 1;
+}
+
+#lsfh-modal-backdrop .lsfh-suggest-loc {
+	color: var(--muted);
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-modal-backdrop .lsfh-suggest-count {
+	color: var(--muted);
+	font-size: var(--fs-sm);
+	white-space: nowrap;
+}
+
+/* ─── Misc ────────────────────────────────────────────────── */
+#lsfh-app .lsfh-loading {
+	text-align: center;
+	padding: var(--space-10);
+	color: var(--muted);
+	font-style: italic;
+	font-size: var(--fs-base);
+}
+
+/* Before you file: contributions under a donor, and the best-efforts list. */
+#lsfh-app .lsfh-table tbody tr.lsfh-subrow td {
+	background: var(--bg);
+	color: var(--muted);
+	font-size: var(--fs-base);
+}
+
+#lsfh-app .lsfh-plain-list {
+	list-style: none;
+	margin: 0 0 var(--space-4);
+	padding: 0;
+}
+
+#lsfh-app .lsfh-plain-list li {
+	padding: var(--space-1) 0;
+	font-size: var(--fs-base);
+}
+
+#lsfh-app .lsfh-empty {
+	text-align: center;
+	padding: var(--space-12) var(--space-5);
+	color: var(--muted);
+	font-size: var(--fs-base);
+}
+
+#lsfh-app .page-desc {
+	color: var(--muted) !important;
+	font-size: var(--fs-base) !important;
+	margin: 20px 0 20px !important;
+}
+
+#lsfh-app .td-actions {
+	display: flex;
+	gap: 5px;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+/* ─── Footer ──────────────────────────────────────────────── */
+#lsfh-app .lsfh-footer {
+	border-top: 1px solid var(--border);
+	background: var(--white);
+	padding: 11px 28px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-footer img {
+	height: 18px !important;
+	width: auto !important;
+	max-width: none !important;
+	opacity: 0.45;
+	display: block;
+}
+
+#lsfh-app .lsfh-footer span {
+	font-size: var(--fs-sm);
+	color: var(--subtle);
+}
+
+#lsfh-app .lsfh-footer a {
+	color: var(--muted) !important;
+	text-decoration: underline !important;
+}
+
+/* ─── Toast ───────────────────────────────────────────────── */
+#lsfh-toast {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	background: var(--surface-inv);
+	color: var(--white);
+	padding: 10px 18px;
+	border-radius: var(--radius);
+	font-size: var(--fs-cmp);
+	font-weight: 500;
+	font-family: inherit;
+	z-index: 99999;
+	transform: translateY(60px);
+	opacity: 0;
+	transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease;
+	pointer-events: none;
+	box-shadow: var(--shadow-lg);
+}
+
+#lsfh-toast.show {
+	transform: translateY(0);
+	opacity: 1;
+}
+
+/* ─── Dashboard top: balance card + stats 50/50 ──────────── */
+#lsfh-app .lsfh-dashboard-top {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--space-4);
+	align-items: stretch;
+	margin-bottom: var(--space-4);
+}
+
+#lsfh-app .lsfh-dashboard-top .lsfh-balance-card {
+	margin-bottom: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+#lsfh-app .lsfh-dashboard-top .lsfh-stats {
+	grid-template-columns: repeat(2, 1fr);
+	margin-bottom: 0;
+	align-content: stretch;
+}
+
+#lsfh-app .lsfh-dashboard-top .lsfh-stat {
+	display: flex;
+	flex-direction: column;
+}
+
+/* ─── Filter bar ──────────────────────────────────────────── */
+#lsfh-app .lsfh-filter-bar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	align-items: center;
+	margin-bottom: var(--space-4);
+}
+
+#lsfh-app .lsfh-filter-pair {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-filter-label {
+	font-size: var(--fs-base);
+	font-weight: 600;
+	color: var(--slate);
+	white-space: nowrap;
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1100px) {
+
+	#lsfh-app .lsfh-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	#lsfh-app .lsfh-balance-row {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	#lsfh-app .lsfh-dash-grid {
+		grid-template-columns: 1fr;
+	}
+
+	#lsfh-app .lsfh-dashboard-top {
+		grid-template-columns: 1fr;
+	}
+
+	#lsfh-app .lsfh-dashboard-top .lsfh-stats {
+		grid-template-columns: repeat(2, 1fr);
+		margin-bottom: 0;
+	}
+}
+
+@media (max-width: 700px) {
+
+	#lsfh-app {
+		margin-left: -10px;
+		margin-right: -11px;
+	}
+
+	#lsfh-app .lsfh-body {
+		padding: 14px 12px;
+	}
+
+	#lsfh-app .lsfh-header {
+		padding: 0 14px;
+	}
+
+	#lsfh-app .lsfh-nav {
+		padding: 0 12px;
+	}
+
+	#lsfh-app .lsfh-stats {
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-3);
+	}
+
+	#lsfh-app .lsfh-dashboard-top {
+		grid-template-columns: 1fr;
+		gap: var(--space-3);
+	}
+
+	#lsfh-app .lsfh-dashboard-top .lsfh-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	/* Balance card — a 2 x 2 grid. The + - = signs only make sense in one
+	   row, so they are dropped here rather than stacking the card into a
+	   screen-high column. */
+	#lsfh-app .lsfh-balance-row {
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+		gap: var(--space-5) var(--space-4);
+	}
+
+	#lsfh-app .lsfh-balance-item {
+		text-align: left;
+	}
+
+	#lsfh-app .lsfh-balance-item:has(> .lsfh-balance-op) {
+		display: none;
+	}
+
+	/* Tables — horizontal scroll on mobile */
+	#lsfh-app .lsfh-box {
+		overflow-x: auto;
+	}
+
+	#lsfh-app .lsfh-table {
+		min-width: 540px;
+	}
+
+	/* Stat cards compact on mobile */
+	#lsfh-app .lsfh-stat {
+		padding: var(--space-4);
+	}
+
+	#lsfh-app .lsfh-stat-icon {
+		width: 30px;
+		height: 30px;
+		margin-bottom: 10px;
+	}
+
+	#lsfh-app .lsfh-stat-num {
+		font-size: var(--fs-2xl);
+	}
+
+	#lsfh-app .lsfh-stat-num.money {
+		font-size: var(--fs-2xl);
+	}
+
+	/* Toolbar — stack buttons full-width on mobile */
+	#lsfh-app .lsfh-toolbar {
+		gap: var(--space-2);
+	}
+
+	#lsfh-app .lsfh-toolbar .lsfh-input {
+		flex: 1;
+		min-width: 120px;
+	}
+
+	#lsfh-app .lsfh-toolbar-right {
+		flex-basis: 100%;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		margin-left: 0;
+	}
+
+	/* Filter bar — each filter takes the full width, label above its field. */
+	#lsfh-app .lsfh-filter-pair {
+		flex: 1 1 100%;
+		flex-direction: column;
+		align-items: stretch;
+		gap: var(--space-1);
+	}
+
+	#lsfh-app .lsfh-filter-bar .lsfh-input {
+		min-width: 140px;
+	}
+
+	#lsfh-app .lsfh-filter-bar > :not(.lsfh-filter-pair) {
+		flex: 1 1 100%;
+	}
+
+	#lsfh-app .lsfh-filter-bar > :not(.lsfh-filter-pair) > button {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	/* Two/three col forms collapse */
+	#lsfh-app .lsfh-two-col {
+		grid-template-columns: 1fr;
+	}
+
+	#lsfh-app .lsfh-three-col {
+		grid-template-columns: 1fr;
+	}
+
+	/* Tabs — horizontally scrollable on mobile */
+	#lsfh-app .lsfh-tabs {
+		overflow-x: auto;
+		scrollbar-width: none;
+		flex-wrap: nowrap;
+	}
+
+	#lsfh-app .lsfh-tabs::-webkit-scrollbar {
+		display: none;
+	}
+
+	#lsfh-app .lsfh-tab {
+		white-space: nowrap;
+		flex-shrink: 0;
+		padding: 8px 12px;
+		font-size: var(--fs-cmp);
+	}
+
+	/* Modal full-width on mobile */
+	#lsfh-modal-backdrop {
+		padding: 10px;
+		top: var(--wp-admin--admin-bar--height, 32px);
+	}
+
+	#lsfh-modal-backdrop .lsfh-modal {
+		padding: 16px 14px;
+		max-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px) - 20px);
+	}
+
+	/* Balance card typography */
+	#lsfh-app .lsfh-balance-value {
+		font-size: var(--fs-xl);
+	}
+
+	#lsfh-app .lsfh-balance-card {
+		padding: var(--space-5);
+	}
+
+	/* Stops a long toolbar pushing the page wider than the screen. */
+	#lsfh-app .lsfh-toolbar--rows,
+	#lsfh-app .lsfh-toolbar-row {
+		min-width: 0;
+		max-width: 100%;
+	}
+
+	/* Action buttons sit two to a row. */
+	#lsfh-app .lsfh-toolbar-right > .btn {
+		flex: 1 1 calc(50% - var(--space-2));
+	}
+
+	/* Filters sit two to a row. */
+	#lsfh-app .lsfh-toolbar-row > .lsfh-input {
+		flex: 1 1 calc(50% - var(--space-2));
+		min-width: 0;
+	}
+
+	/* 16px stops iOS zooming the page when a field is focused; the taller
+	   controls are easier to hit with a thumb. */
+	#lsfh-app .lsfh-input {
+		font-size: max(16px, var(--fs-base));
+		min-height: 40px;
+	}
+
+	#lsfh-app .btn {
+		min-height: 36px;
+	}
+
+	/* Drawer full-width on mobile */
+	.lsfh-drawer {
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+/* ─── Detail drawer ───────────────────────────────────────── */
+.lsfh-drawer-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(17, 24, 39, 0.28);
+	z-index: 99990;
+	backdrop-filter: blur(1px);
+}
+
+.lsfh-drawer {
+	position: fixed;
+	top: var(--wp-admin--admin-bar--height, 32px);
+	right: 0;
+	width: 420px;
+	max-width: 92vw;
+	height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+	background: var(--white);
+	box-shadow: -4px 0 40px rgba(0, 0, 0, 0.18);
+	z-index: 99991;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.lsfh-drawer-header {
+	padding: 18px 20px 14px;
+	border-bottom: 1px solid var(--border);
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	flex-shrink: 0;
+}
+
+.lsfh-drawer-body {
+	flex: 1;
+	overflow-y: auto;
+	padding: 20px;
+}
+
+.lsfh-drawer-footer {
+	padding: 14px 20px;
+	border-top: 1px solid var(--border);
+	display: flex;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+.lsfh-drawer-section {
+	margin-bottom: 20px;
+}
+
+.lsfh-drawer-section-title {
+	font-size: var(--fs-micro);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	color: var(--muted);
+	margin-bottom: 8px;
+}
+
+.lsfh-drawer-field {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	padding: 5px 0;
+	border-bottom: 1px solid var(--border-lt);
+	font-size: var(--fs-base);
+	gap: 8px;
+}
+
+.lsfh-drawer-field:last-child {
+	border-bottom: none;
+}
+
+.lsfh-drawer-label {
+	color: var(--muted);
+	font-size: var(--fs-cmp);
+	flex-shrink: 0;
+}
+
+.lsfh-drawer-value {
+	color: var(--ink);
+	font-weight: 500;
+	text-align: right;
+}
+
+/* Row states — three distinct steps.
+   These previously all resolved to the same colour: --p-xlt and --teal-50
+   are both #F0FDFA, so a merely-hovered row was indistinguishable from one
+   checked for a bulk action. With a destructive "Delete N" button that
+   meant you could not confirm the selection before committing to it.
+
+   hover   → lightest wash (--p-xlt), transient, follows the pointer
+   active  → deeper wash (--p-lt), the row whose detail drawer is open
+   checked → same deeper wash PLUS a solid left accent, so a selection can
+             be scanned down a long table at a glance rather than compared
+             shade-by-shade. A row that is both active and checked keeps
+             the accent, which is the state that matters before deleting. */
+.lsfh-row-active td {
+	background: var(--p-lt) !important;
+}
+
+.lsfh-row-checked td {
+	background: var(--p-lt) !important;
+}
+
+#lsfh-app .lsfh-table tbody tr.lsfh-row-checked > td:first-child {
+	box-shadow: inset 3px 0 0 0 var(--p);
+}
+
+#lsfh-app .lsfh-table tbody tr {
+	cursor: pointer;
+}
+
+/* ─── Bulk action bar ─────────────────────────────────────── */
+#lsfh-app .lsfh-bulk-bar {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	padding: 8px 14px;
+	margin-bottom: 8px;
+	color: var(--ink);
+	background: var(--p-xlt);
+	border: 1px solid var(--p-lt);
+	border-radius: var(--radius);
+	animation: lsfh-fadein 0.15s ease;
+}
+
+/* This animation named a @keyframes that existed nowhere in the stylesheet, so
+   the bar has always appeared abruptly. Defining it restores the intent. */
+@keyframes lsfh-fadein {
+
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	#lsfh-app .lsfh-bulk-bar {
+		animation: none;
+	}
+}
+
+#lsfh-app .lsfh-bulk-count {
+	font-size: var(--fs-base);
+	font-weight: 700;
+	color: var(--p-dk);
+	margin-right: 4px;
+}
+
+#lsfh-app select.lsfh-bulk-select {
+	height: 28px;
+	padding: 2px 6px;
+	font-size: var(--fs-base);
+	width: auto;
+	min-width: 130px;
+	color: var(--ink) !important;
+	background: var(--white) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: var(--radius-sm);
+}
+
+/* ─── Sortable column headers ──────────────────────────────── */
+#lsfh-app .lsfh-th-sort {
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+/* On the dark header bar, the old var(--p) hover/active colour would be
+   teal-on-teal and effectively invisible. White throughout instead, with
+   the inactive arrow dimmed by opacity rather than hue. .7 is the floor:
+   white at .7 over --p-dk is 3.56:1, clearing the 3:1 WCAG minimum for a
+   non-text UI element — .4 would be 2.12:1 and too faint to find. */
+
+/* Hover must use background-IMAGE, not background-color: background-color
+   would REPLACE the header's green rather than tint it, compositing over
+   the white box behind and rendering a white cell with white text. An
+   overlay layers on top of --p-dk instead, and darkening (rather than
+   lightening) raises contrast to ~6.5:1 instead of dropping it below AA. */
+#lsfh-app .lsfh-th-sort:hover {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.14));
+}
+
+/* Sortable headers are keyboard-operable (tabIndex + onKeyActivate), so
+   they need a visible focus ring. White, since it sits on the green bar. */
+#lsfh-app .lsfh-th-sort:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: -3px;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.14));
+}
+
+.lsfh-sort-icon {
+	margin-left: 3px;
+	font-size: var(--fs-micro);
+	opacity: 0.7;
+}
+
+.lsfh-sort-icon.on {
+	opacity: 1;
+	color: #fff;
+}
+
+/* stylelint-disable selector-id-pattern -- WordPress builds this ID from the
+   widget id registered in PHP ('lsfh_finance_snapshot'), so it cannot be
+   renamed to hyphens. */
+
+/* ─── WP Dashboard Widget ─────────────────────────────────── */
+#lsfh_finance_snapshot .lsfh-dw-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+	margin-bottom: 14px;
+}
+
+#lsfh_finance_snapshot .lsfh-dw-card {
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 12px 10px;
+	text-align: center;
+}
+
+#lsfh_finance_snapshot .lsfh-dw-val {
+	font-size: var(--fs-2xl);
+	font-weight: 700;
+	color: var(--ink);
+	line-height: 1.2;
+	word-break: break-all;
+}
+
+#lsfh_finance_snapshot .lsfh-dw-card.balance .lsfh-dw-val {
+	color: var(--p);
+}
+
+#lsfh_finance_snapshot .lsfh-dw-lbl {
+	font-size: var(--fs-micro);
+	color: var(--muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin-top: 4px;
+}
+
+#lsfh_finance_snapshot .lsfh-dw-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-top: 10px;
+	border-top: 1px solid var(--border);
+	font-size: var(--fs-cmp);
+}
+
+#lsfh_finance_snapshot .lsfh-dw-footer a.button {
+	font-size: var(--fs-cmp);
+}
+
+#lsfh_finance_snapshot .lsfh-dw-footer a:not(.button) {
+	color: var(--muted);
+}
+
+#lsfh_finance_snapshot .lsfh-dw-footer a:not(.button):hover {
+	color: var(--p);
+}
+/* stylelint-enable selector-id-pattern */
+
+/* ─── Category badges (used in Expenditures) ───────────────── */
+#lsfh-app .lsfh-cat-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: var(--radius-full);
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	background: var(--cat-badge-bg, var(--p-lt));
+	color: var(--cat-badge-color, var(--p-dk));
+}
+
+#lsfh-app .lsfh-cat-badge--colored {
+	border-color: var(--cat-badge-border, var(--p));
+}
+
+/* ─── Badge list (wrapping flex row of badges) ──────────────── */
+#lsfh-app .lsfh-badge-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+
+/* ─── Drawer header info block ──────────────────────────────── */
+#lsfh-app .lsfh-drawer-header-info {
+	flex: 1;
+}
+
+#lsfh-app .lsfh-drawer-payee {
+	font-weight: 700;
+	font-size: var(--fs-xl);
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-drawer-header-info .lsfh-meta-sm {
+	margin-top: 2px;
+}
+
+/* ─── Drawer notes body ─────────────────────────────────────── */
+#lsfh-app .lsfh-notes-text {
+	line-height: 1.6;
+}
+
+/* ─── Ghost danger button ───────────────────────────────────── */
+#lsfh-app .btn-ghost--danger {
+	color: var(--alert);
+}
+
+/* ─── Payee autocomplete ────────────────────────────────────── */
+#lsfh-app .lsfh-field--relative {
+	position: relative;
+}
+
+#lsfh-app .lsfh-autocomplete-dropdown {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-top: none;
+	border-radius: 0 0 var(--radius) var(--radius);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	z-index: 999;
+	max-height: 220px;
+	overflow-y: auto;
+}
+
+#lsfh-app .lsfh-autocomplete-item {
+	padding: 8px 12px;
+	cursor: pointer;
+}
+
+#lsfh-app .lsfh-autocomplete-item:not(:last-child) {
+	border-bottom: 1px solid var(--border-lt);
+}
+
+#lsfh-app .lsfh-autocomplete-item:hover {
+	background: var(--bg);
+}
+
+#lsfh-app .lsfh-autocomplete-item__name {
+	font-weight: 600;
+	font-size: var(--fs-base);
+	color: var(--ink);
+}
+
+#lsfh-app .lsfh-autocomplete-item__addr {
+	margin-top: 1px;
+}
+
+/* ─── Hint inside label resets font weight ──────────────────── */
+#lsfh-app .lsfh-field label .hint {
+	font-weight: 400;
+}
+
+/* ─── Receipt link top margin (after file input) ────────────── */
+#lsfh-app .lsfh-receipt-link--mt {
+	margin-top: 6px;
+}
+
+/* ─── Avatar with centered icon ─────────────────────────────── */
+#lsfh-app .lsfh-avatar--icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--p-lt);
+	color: var(--p-dk);
+}
+
+/* ─── Clickable table row ───────────────────────────────────── */
+#lsfh-app .lsfh-tr-pointer {
+	cursor: pointer;
+}
+
+/* ─── Table cell utilities ──────────────────────────────────── */
+#lsfh-app .lsfh-th-check {
+	width: 32px;
+	padding-right: 0;
+}
+
+#lsfh-app .lsfh-td-check {
+	width: 32px;
+	padding-right: 0;
+}
+
+#lsfh-app .lsfh-center {
+	text-align: center;
+}
+
+#lsfh-app .lsfh-td-desc {
+	max-width: 200px;
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+}
+
+/* ─── Balanced toggle icon button states ────────────────────── */
+
+/* ─── Toolbar input widths & utilities ──────────────────────── */
+
+/* Toolbar search grows into the slack between it and the right-hand group
+   rather than sitting at a fixed width with a void beside it. Capped so it
+   does not become an absurd ribbon on ultrawide screens, and floored so it
+   stays usable when filters share the row. */
+
+/* Sized to the expected query, not to the leftover space. This grew to fill
+   the toolbar row and hit its 420px cap on any normal screen, which reads as
+   an invitation to type a sentence — a donor name is around 20 characters.
+   flex-grow: 0 holds it at 280px; it still shrinks to 180px when the row
+   tightens, and the <=700px rule below lets it fill the row again. */
+#lsfh-app .lsfh-input--search {
+	flex: 0 1 280px;
+	min-width: 180px;
+}
+
+#lsfh-app .lsfh-input--period {
+	width: 190px;
+}
+
+#lsfh-app .lsfh-btn-muted {
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-total-alert {
+	color: var(--alert);
+}
+
+#lsfh-app .lsfh-flex-spacer {
+	flex: 1;
+}
+
+/* ─── Import modal — upload step ────────────────────────────── */
+#lsfh-app .lsfh-import-upload {
+	padding: 36px 24px;
+	text-align: center;
+}
+
+#lsfh-app .lsfh-import-upload__hint {
+	margin-bottom: 16px;
+	color: var(--muted);
+	font-size: var(--fs-lg);
+	line-height: 1.6;
+}
+
+#lsfh-app .lsfh-file-btn {
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+}
+
+#lsfh-app .lsfh-hidden {
+	display: none;
+}
+
+#lsfh-app .lsfh-import-error {
+	color: var(--alert);
+	font-size: var(--fs-base);
+	margin-top: 14px;
+	margin-bottom: 10px;
+}
+
+/* ─── Import modal — map step ───────────────────────────────── */
+#lsfh-app .lsfh-import-body {
+	padding: 0 24px;
+	margin-top: 16px;
+}
+
+#lsfh-app .lsfh-import-period-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+}
+
+#lsfh-app .lsfh-import-period-select {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#lsfh-app .lsfh-import-period-label {
+	font-size: var(--fs-base);
+	font-weight: 600;
+	color: var(--slate);
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-import-map-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 4px 20px;
+	margin-bottom: 18px;
+}
+
+#lsfh-app .lsfh-field--flush {
+	margin-bottom: 0;
+}
+
+#lsfh-app .lsfh-import-map-label {
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-app .lsfh-import-preview {
+	overflow-x: auto;
+	margin-bottom: 16px;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--border);
+}
+
+#lsfh-app .lsfh-table--dense {
+	font-size: var(--fs-sm);
+	margin: 0;
+}
+
+#lsfh-app .lsfh-td-truncate {
+	max-width: 130px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ─── Import modal — done step ──────────────────────────────── */
+#lsfh-app .lsfh-import-done {
+	padding: 40px 24px;
+	text-align: center;
+}
+
+#lsfh-app .lsfh-import-done__icon {
+	font-size: var(--fs-4xl);
+	margin-bottom: 10px;
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-import-done__title {
+	font-weight: 700;
+	font-size: var(--fs-xl);
+	color: var(--ink);
+	margin-bottom: 20px;
+}
+
+#lsfh-app .lsfh-import-done__stats {
+	display: flex;
+	justify-content: center;
+	gap: 40px;
+	margin-bottom: 28px;
+}
+
+#lsfh-app .lsfh-import-stat__num {
+	font-size: var(--fs-4xl);
+	font-weight: 800;
+	color: var(--p);
+	line-height: 1;
+}
+
+#lsfh-app .lsfh-import-stat__num--dim {
+	font-size: var(--fs-4xl);
+	font-weight: 800;
+	color: var(--subtle);
+	line-height: 1;
+}
+
+#lsfh-app .lsfh-import-stat__label {
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+	margin-top: 4px;
+}
+
+/* ─── Misc modal utilities ──────────────────────────────────── */
+#lsfh-app .lsfh-meta--mb {
+	margin: 0 0 12px;
+}
+
+/* ─── Settings width wrappers ──────────────────────────────── */
+#lsfh-app .lsfh-settings-body {
+	max-width: 540px;
+}
+
+#lsfh-app .lsfh-settings-body--md {
+	max-width: 480px;
+}
+
+#lsfh-app .lsfh-field--narrow {
+	max-width: 200px;
+}
+
+/* ─── Settings misc modifiers ───────────────────────────────── */
+#lsfh-app .lsfh-check-row--mb {
+	margin-bottom: 16px;
+}
+
+#lsfh-app .lsfh-section-hdr--mt {
+	margin-top: 24px;
+}
+
+#lsfh-app .page-desc--flush {
+	margin: 0;
+}
+
+#lsfh-app .hint--flush {
+	margin-top: 0;
+}
+
+#lsfh-app .lsfh-icon-btn--save {
+	color: var(--p);
+}
+
+/* ─── Form message variants ─────────────────────────────────── */
+#lsfh-app .form-msg--ok {
+	color: var(--p);
+}
+
+#lsfh-app .form-msg--err {
+	color: var(--alert);
+}
+
+/* ─── Election type "other" custom input ────────────────────── */
+#lsfh-app .lsfh-select-other {
+	margin-top: 6px;
+}
+
+/* ─── Filing Periods table utilities ────────────────────────── */
+#lsfh-app .lsfh-table-tr--edit {
+	background: var(--p-xlt);
+}
+
+#lsfh-app .lsfh-table-input {
+	padding: 3px 8px;
+	font-size: var(--fs-base);
+}
+
+#lsfh-app .lsfh-table-input--right {
+	text-align: left;
+}
+
+#lsfh-app .lsfh-table thead th.lsfh-th--right {
+	text-align: left;
+}
+
+#lsfh-app .lsfh-fp-table-wrap {
+	margin-bottom: 24px;
+}
+
+#lsfh-app .lsfh-fp-form {
+	max-width: 560px;
+}
+
+#lsfh-app .lsfh-payout-note {
+	display: inline-block;
+	max-width: 240px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: bottom;
+	cursor: pointer;
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-app .lsfh-fp-note {
+	margin-top: 4px;
+	font-size: var(--fs-sm);
+	color: var(--gold-dk);
+	white-space: normal;
+}
+
+/* ─── Color swatch ──────────────────────────────────────────── */
+#lsfh-app .lsfh-color-swatch {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	margin-top: 6px;
+}
+
+#lsfh-app .lsfh-color-swatch__btn {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	flex-shrink: 0;
+	background: var(--swatch-color, #ccc);
+
+	/* outline + box-shadow vary per swatch color: set via inline style on the
+	   selected state */
+}
+
+/* ─── Swatch section label ──────────────────────────────────── */
+#lsfh-app .lsfh-swatch-label {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	margin-bottom: 6px;
+}
+
+#lsfh-app .lsfh-swatch-label__opt {
+	text-transform: none;
+	font-weight: 400;
+	letter-spacing: 0;
+}
+
+/* ─── Category card grid ────────────────────────────────────── */
+#lsfh-app .lsfh-cat-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 12px;
+	margin-bottom: 28px;
+}
+
+/* ─── Category card ─────────────────────────────────────────── */
+#lsfh-app .lsfh-cat-card {
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: 10px 12px;
+	box-shadow: var(--shadow-sm);
+	min-width: 0;
+
+	/* border-left color is dynamic (the category's color): set via --cat-color
+	   inline */
+	border-left: 3px solid var(--cat-color, var(--p));
+}
+
+/* ─── Category card display row ─────────────────────────────── */
+#lsfh-app .lsfh-cat-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+#lsfh-app .lsfh-cat-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	display: inline-block;
+	background: var(--cat-color, var(--p));
+}
+
+#lsfh-app .lsfh-cat-name-wrap {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+}
+
+#lsfh-app .lsfh-cat-name {
+	font-weight: 600;
+	font-size: var(--fs-lg);
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-cat-budget {
+	font-size: var(--fs-sm);
+	color: var(--muted);
+	font-weight: 500;
+}
+
+#lsfh-app .lsfh-cat-row .lsfh-icon-btn {
+	flex-shrink: 0;
+}
+
+/* ─── Category card edit mode ───────────────────────────────── */
+#lsfh-app .lsfh-cat-edit {
+	min-width: 0;
+}
+
+#lsfh-app .lsfh-cat-edit__row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+
+#lsfh-app .lsfh-cat-edit__row .lsfh-input {
+	flex: 1;
+	min-width: 0;
+	padding: 3px 8px;
+	font-size: var(--fs-base);
+}
+
+#lsfh-app .lsfh-cat-edit__row .lsfh-icon-btn {
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-cat-color-sect {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px solid var(--border-lt);
+}
+
+#lsfh-app .lsfh-cat-budget-sect {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px solid var(--border-lt);
+}
+
+#lsfh-app .lsfh-input--budget {
+	width: 130px;
+	flex-shrink: 0;
+}
+
+/* ─── Add category card ─────────────────────────────────────── */
+#lsfh-app .lsfh-add-cat-card {
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: 16px 18px;
+	max-width: 500px;
+	box-shadow: var(--shadow-sm);
+}
+
+#lsfh-app .lsfh-add-cat-row {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 14px;
+}
+
+#lsfh-app .lsfh-add-cat-row .lsfh-input:not(.lsfh-input--budget) {
+	flex: 1;
+	min-width: 0;
+}
+
+#lsfh-app .lsfh-add-cat-row .btn {
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-add-cat-color {
+	border-top: 1px solid var(--border-lt);
+	padding-top: 12px;
+}
+
+/* ─── Connection status badge ───────────────────────────────── */
+#lsfh-app .lsfh-conn-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 10px;
+	border-radius: var(--radius-full);
+	font-size: var(--fs-cmp);
+	font-weight: 600;
+}
+
+#lsfh-app .lsfh-conn-badge__dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	display: inline-block;
+	flex-shrink: 0;
+}
+
+#lsfh-app .lsfh-conn-badge--none {
+	background: var(--border-lt);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-conn-badge--none  .lsfh-conn-badge__dot {
+	background: var(--subtle);
+}
+
+#lsfh-app .lsfh-conn-badge--saved {
+	background: var(--p-xlt);
+	color: var(--p-dk);
+}
+
+#lsfh-app .lsfh-conn-badge--saved .lsfh-conn-badge__dot {
+	background: var(--p);
+}
+
+#lsfh-app .lsfh-conn-badge--ok {
+	background: var(--green-lt);
+	color: var(--green);
+}
+
+#lsfh-app .lsfh-conn-badge--ok    .lsfh-conn-badge__dot {
+	background: var(--green);
+}
+
+#lsfh-app .lsfh-conn-badge--fail {
+	background: var(--alert-lt);
+	color: var(--alert-dk);
+}
+
+#lsfh-app .lsfh-conn-badge--fail  .lsfh-conn-badge__dot {
+	background: var(--alert);
+}
+
+#lsfh-app .lsfh-conn-badge-wrap {
+	margin-bottom: 18px;
+}
+
+#lsfh-app .lsfh-info-wrap {
+	position: relative;
+	display: inline-flex;
+	vertical-align: middle;
+	margin-left: 3px;
+}
+
+#lsfh-app .lsfh-info-icon {
+	display: inline-flex;
+	align-items: center;
+	color: var(--subtle);
+	cursor: pointer;
+	transition: color var(--tx);
+}
+
+#lsfh-app .lsfh-info-icon:hover,
+#lsfh-app .lsfh-info-icon--active {
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-info-popover {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	transform: none;
+	background: var(--ink);
+	color: #fff;
+	font-size: var(--fs-sm);
+	line-height: 1.4;
+	padding: 6px 10px;
+	border-radius: var(--radius-sm);
+	white-space: normal;
+	width: 220px;
+	z-index: 200;
+	pointer-events: none;
+	box-shadow: var(--shadow-md);
+}
+
+#lsfh-app .lsfh-info-popover::before {
+	content: "";
+	position: absolute;
+	bottom: 100%;
+	right: 4px;
+	transform: none;
+	border: 5px solid transparent;
+	border-bottom-color: var(--ink);
+}
+
+/* ─── Integrations tab ──────────────────────────────────────── */
+#lsfh-app .lsfh-integration-hdr {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+}
+
+#lsfh-app .lsfh-integration-hdr .page-desc {
+	margin: 0;
+}
+
+/* ─── Staff tab ─────────────────────────────────────────────── */
+#lsfh-app .lsfh-staff-table-wrap {
+	margin-bottom: 24px;
+	max-width: 560px;
+}
+
+#lsfh-app .lsfh-staff-search {
+	max-width: 400px;
+	position: relative;
+}
+
+#lsfh-app .lsfh-staff-search .lsfh-input {
+	width: 100%;
+}
+
+#lsfh-app .lsfh-search-results {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-md);
+	z-index: 100;
+}
+
+#lsfh-app .lsfh-search-result-item {
+	padding: 10px 14px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--border-lt);
+	font-size: var(--fs-base);
+}
+
+#lsfh-app .lsfh-search-result-item:hover {
+	background: var(--p-xlt);
+}
+
+#lsfh-app .lsfh-staff-msg {
+	color: var(--p);
+	margin-top: 10px;
+	font-size: var(--fs-base);
+}
+
+/* ─── WP wrapper padding reset ────────────────────────────── */
+body.toplevel_page_lsfh-dashboard #wpbody-content,
+body.financial-hub_page_lsfh-donations #wpbody-content,
+body.financial-hub_page_lsfh-expenditures #wpbody-content,
+body.financial-hub_page_lsfh-inkind #wpbody-content,
+body.financial-hub_page_lsfh-settings #wpbody-content {
+	padding-bottom: 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Wide-table scroll region
+   ──────────────────────────────────────────────────────────────
+   Height-capped viewport + sticky header row + frozen leading
+   column(s), so a 12–14 column table's horizontal scrollbar sits
+   near the fold instead of ~3000px below it.
+
+   Lives INSIDE .lsfh-box. That class also wraps non-table cards,
+   and its overflow:hidden is what clips the rounded corners, so it
+   must never become the desktop scroller.
+
+   Markup:
+     <div class="lsfh-box lsfh-box--table">
+       <div class="lsfh-tscroll" tabindex="0" role="region"
+            aria-label="Disbursements table">
+         <table class="lsfh-table"> … </table>
+       </div>
+     </div>
+   Checkbox tables add .lsfh-tscroll--frz2 to freeze columns 1+2.
+══════════════════════════════════════════════════════════════ */
+
+#lsfh-app .lsfh-tscroll {
+
+	/* Fixed shell above .lsfh-body: header 57 + nav 44 + body pad-top 24 */
+	--lsfh-shell: 125px;
+
+	/* In-body chrome above the table: page tabs ~58 + toolbar 50–134
+     + optional bulk bar 54. Tune per call site via inline style. */
+	--lsfh-chrome: 200px;
+
+	/* Left offset of the 2nd frozen column = rendered width of col 1. */
+	--lsfh-frz-2: 40px;
+
+	overflow: auto;
+
+	/* One line on purpose: the linter forbids breaking a calc() at its
+	   operators. */
+	/* stylelint-disable-next-line @stylistic/max-line-length */
+	max-height: max(320px, calc(100vh - var(--wp-admin--admin-bar--height, 32px) - var(--lsfh-shell) - var(--lsfh-chrome)));
+
+	/* Deliberately no overscroll-behavior: let the wheel chain to the
+     page once the region bottoms out. Trapping it here is worse. */
+}
+
+#lsfh-app .lsfh-tscroll:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: -2px;
+}
+
+/* Force classic (non-overlay) scrollbars so the horizontal bar is
+   discoverable on macOS. Do NOT add scrollbar-width — in Chrome 121+
+   it takes precedence over ::-webkit-scrollbar and re-enables overlay. */
+#lsfh-app .lsfh-tscroll::-webkit-scrollbar {
+	width: 11px;
+	height: 11px;
+}
+
+#lsfh-app .lsfh-tscroll::-webkit-scrollbar-track {
+	background: var(--bg);
+}
+
+#lsfh-app .lsfh-tscroll::-webkit-scrollbar-thumb {
+	background: var(--border-md);
+	border-radius: var(--radius-sm);
+	border: 2px solid var(--bg);
+	background-clip: padding-box;
+}
+
+#lsfh-app .lsfh-tscroll::-webkit-scrollbar-thumb:hover {
+	background: var(--subtle);
+}
+
+/* Per-cell borders. With border-collapse:collapse the borders belong
+   to the table, not the cell, so they do not travel with sticky cells —
+   the header underline and the frozen column's divider detach while
+   scrolling in Chrome, Safari and Firefox. Scoped to the scroll region
+   only. Safe here: these tables set border-bottom on th/td and nothing
+   else (see :250, :253), so `separate` yields no double borders. */
+#lsfh-app .lsfh-tscroll .lsfh-table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+/* Opaque row canvas. Frozen cells echo it via background-color:inherit
+   so scrolled columns never bleed through. The row-state rules
+   (:257 hover, :761 .lsfh-row-active, :762 .lsfh-row-checked) are
+   !important on td and therefore still win on the frozen cell too.
+   Inline background on <tr> (reconciled disbursements) is inherited. */
+#lsfh-app .lsfh-tscroll .lsfh-table tbody tr {
+	background-color: var(--white);
+}
+
+#lsfh-app .lsfh-tscroll .lsfh-table tbody tr.lsfh-table-tr--edit {
+	background-color: var(--p-xlt);
+}
+
+/* ── Sticky header row. On th, never thead — thead sticky is unreliable. ── */
+#lsfh-app .lsfh-tscroll .lsfh-table thead th {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+
+/* ── Frozen column 1. :not([colspan]) skips the loading/empty rows. ── */
+#lsfh-app .lsfh-tscroll .lsfh-table tr > :first-child:not([colspan]) {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	box-shadow: 1px 0 0 0 var(--border), 6px 0 8px -6px rgba(17, 24, 39, 0.14);
+}
+
+#lsfh-app .lsfh-tscroll .lsfh-table tbody tr > :first-child:not([colspan]) {
+	background-color: inherit;
+}
+
+/* Header ∩ frozen column must sit above both. The :not([colspan]) is
+   required for specificity, not filtering: the frozen-column rule above
+   scores (1,4,1) and would otherwise outrank a plain thead th:first-child
+   (1,3,2), leaving this cell at z-index 1 — tied with the body's frozen
+   cells, which then paint over it because tbody follows thead. */
+#lsfh-app .lsfh-tscroll .lsfh-table thead th:first-child:not([colspan]) {
+	z-index: 3;
+}
+
+/* ── Frozen columns 1+2 (checkbox tables) ── */
+#lsfh-app .lsfh-tscroll--frz2 .lsfh-table tr > :first-child:not([colspan]) {
+	box-shadow: none;
+}
+
+#lsfh-app .lsfh-tscroll--frz2 .lsfh-table tr > :nth-child(2) {
+	position: sticky;
+	left: var(--lsfh-frz-2);
+	z-index: 1;
+	box-shadow: 1px 0 0 0 var(--border), 6px 0 8px -6px rgba(17, 24, 39, 0.14);
+}
+
+#lsfh-app .lsfh-tscroll--frz2 .lsfh-table tbody tr > :nth-child(2) {
+	background-color: inherit;
+}
+
+#lsfh-app .lsfh-tscroll--frz2 .lsfh-table thead th:nth-child(2) {
+	z-index: 3;
+}
+
+/* The checked-row accent must be composed with the frozen column's own
+   divider shadows, not replace them — box-shadow does not merge across
+   rules, so the later declaration would otherwise drop the divider and
+   the sticky column would lose its edge on selected rows only. */
+#lsfh-app .lsfh-tscroll .lsfh-table tbody tr.lsfh-row-checked > :first-child:not([colspan]) {
+	box-shadow:
+		inset 3px 0 0 0 var(--p),
+		1px 0 0 0 var(--border),
+		6px 0 8px -6px rgba(17, 24, 39, 0.14);
+}
+
+#lsfh-app .lsfh-tscroll--frz2 .lsfh-table tbody tr.lsfh-row-checked > :first-child:not([colspan]) {
+	box-shadow: inset 3px 0 0 0 var(--p);
+}
+
+/* Pin the checkbox column so --lsfh-frz-2 is exact while scrolling.
+   Width and the 2nd column's left offset both read --lsfh-frz-2, so they
+   cannot drift apart. Padding is restated deliberately: the padding-right:0
+   on .lsfh-th-check/.lsfh-td-check (:869-870, specificity 1,1,0) is already
+   dead — the base `.lsfh-table thead th { padding: 10px 16px }` (1,1,2)
+   outranks it — so without this the column renders ~55px against a 40px
+   offset and column 2 overlaps column 1. 12+16+12 = the 40px declared. */
+#lsfh-app .lsfh-tscroll .lsfh-table .lsfh-th-check,
+#lsfh-app .lsfh-tscroll .lsfh-table .lsfh-td-check {
+	width: var(--lsfh-frz-2);
+	min-width: var(--lsfh-frz-2);
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+/* Zero the checkbox's margin inside the frozen column. Browser and WP-admin
+   defaults differ (UA default is ~3px/4px), and that margin is added to the
+   column's min-content width — leaving the column wider than --lsfh-frz-2
+   and overlapping column 2 by exactly that much once scrolled. With this,
+   12 + 16 + 12 = the 40px declared, deterministically. */
+#lsfh-app .lsfh-tscroll .lsfh-table .lsfh-th-check input[type="checkbox"],
+#lsfh-app .lsfh-tscroll .lsfh-table .lsfh-td-check input[type="checkbox"] {
+	margin: 0;
+}
+
+@media (max-width: 700px) {
+
+	/* :674 gives .lsfh-box overflow-x:auto. A table box must not also
+     scroll, or you get nested horizontal scrollers. Must be `hidden`
+     on both axes: `visible` on one axis computes back to `auto`. */
+	#lsfh-app .lsfh-box--table {
+		overflow: hidden;
+	}
+
+	/* Page-scroll vertically on mobile; keep the frozen column + swipe. */
+	#lsfh-app .lsfh-tscroll {
+		max-height: none;
+	}
+}
+
+@media print {
+
+	#lsfh-app .lsfh-tscroll {
+		max-height: none;
+		overflow: visible;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table thead th,
+	#lsfh-app .lsfh-tscroll .lsfh-table tr > :first-child,
+	#lsfh-app .lsfh-tscroll--frz2 .lsfh-table tr > :nth-child(2) {
+		position: static;
+		box-shadow: none;
+	}
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   Focus affordances follow the user's WP admin colour scheme
+   WooCommerce's extension guidelines ask extensions to respect the
+   admin colour scheme the user picked. Focus is the right place to
+   honour that and the wrong place to assert a brand: it is a platform
+   affordance answering "where am I?", and a keyboard user moving
+   between wp-admin and this plugin should not see the ring change
+   colour halfway. Brand identity stays with the accent (teal).
+
+   Declared on #lsfh-app, NOT :root. Core sets --wp-admin-theme-color on
+   `body.admin-color-*`, while wp-components separately sets a :root
+   fallback (#3858e9). A :root declaration would silently resolve to that
+   fallback and never track the user's actual scheme; a body descendant
+   inherits the real one. #lsfh-modal-backdrop is listed because modals
+   render outside #lsfh-app.
+
+   Safe in every scheme: all eight core accents clear 3:1 against this
+   UI's background, the threshold for non-text UI. They are NOT used for
+   accent text — four of the eight (light, blue, midnight, sunrise) land
+   at 4.37–4.45:1 there, under the 4.5:1 floor. Teal keeps that job.
+   Falls back to --p wherever the variable is absent.
+══════════════════════════════════════════════════════════════ */
+#lsfh-app,
+#lsfh-modal-backdrop {
+	--focus: var(--wp-admin-theme-color, var(--p));
+}
+
+/* Tint the ring to match. The tokens.css --ring stays as the fallback for
+   engines without color-mix(). */
+@supports (color: color-mix(in srgb, red 50%, transparent)) {
+
+	#lsfh-app,
+	#lsfh-modal-backdrop {
+		--ring: 0 0 0 3px color-mix(in srgb, var(--focus) 18%, transparent);
+	}
+}
+
+/* ─── Phone: tables become cards ────────────────────────────
+   Each row is a card. The column headings turn into a row of sort chips
+   above the list, so sorting and select-all still work. The labels shown
+   inside a card come from the data-label that table-labels.js copies onto
+   each cell. The selectors are as specific as the frozen-column rules they
+   undo. */
+@media (max-width: 700px) {
+
+	#lsfh-app .lsfh-tscroll .lsfh-table,
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody,
+	#lsfh-app .lsfh-tscroll .lsfh-table thead {
+		display: block;
+		min-width: 0;
+	}
+
+	#lsfh-app .lsfh-tscroll {
+		max-height: none;
+		overflow: visible;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table thead tr {
+		display: flex;
+		gap: var(--space-2);
+		padding: var(--space-3);
+		overflow-x: auto;
+		background: var(--bg);
+		border-bottom: 1px solid var(--border);
+		scrollbar-width: none;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table thead th:nth-child(n) {
+		position: static;
+		flex: 0 0 auto;
+		width: auto;
+		min-width: 0;
+		padding: 4px 12px;
+		background: var(--white);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-full);
+		box-shadow: none;
+		font-size: var(--fs-cmp);
+		letter-spacing: 0;
+		text-transform: none;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table thead th:empty {
+		display: none;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody tr {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-2) var(--space-4);
+		padding: var(--space-3) var(--space-4);
+		border-bottom: 1px solid var(--border-lt);
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody tr:last-child {
+		border-bottom: none;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody tr > td:nth-child(n):not([colspan]) {
+		position: static;
+		z-index: auto;
+		display: block;
+		width: auto;
+		min-width: 0;
+		padding: 0;
+		border: 0;
+
+		/* Some cells centre themselves with an inline style. */
+		text-align: left !important;
+		white-space: normal;
+		overflow-wrap: anywhere;
+		box-shadow: none;
+		background: transparent;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody tr.lsfh-row-checked > td:nth-child(n):not([colspan]) {
+		box-shadow: none;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody tr.lsfh-row-checked {
+		background: var(--p-xlt);
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table td[colspan] {
+		grid-column: 1 / -1;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table td[data-label]:not([data-label=""])::before {
+		content: attr(data-label);
+		display: block;
+		margin-bottom: 2px;
+		font-size: var(--fs-micro);
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	/* The main cell (donor, payee...) spans the card, with no label. */
+	#lsfh-app .lsfh-tscroll .lsfh-table td[data-primary] {
+		order: -1;
+		grid-column: 1 / -1;
+		padding-right: var(--space-8);
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table td[data-primary][data-label]:not([data-label=""])::before {
+		display: none;
+	}
+
+	#lsfh-app .lsfh-tscroll .lsfh-table tbody tr > td.lsfh-td-check:nth-child(n):not([colspan]) {
+		position: absolute;
+		top: var(--space-3);
+		right: var(--space-3);
+		left: auto;
+		z-index: 1;
+	}
+
+	/* A cell with no heading is the row's action buttons. */
+	#lsfh-app .lsfh-tscroll .lsfh-table td[data-label=""]:not(.lsfh-td-check) {
+		display: flex;
+		grid-column: 1 / -1;
+		justify-content: flex-end;
+		gap: var(--space-2);
+		padding-top: var(--space-2);
+		border-top: 1px solid var(--border-lt);
+	}
+
+	/* Tab rows that scroll sideways fade at the edge that has more. */
+	#lsfh-app .lsfh-tabs {
+		--tabs-bg: var(--bg);
+
+		background:
+			linear-gradient(to right, var(--tabs-bg) 30%, transparent) left / 32px 100% no-repeat local,
+			linear-gradient(to left, var(--tabs-bg) 30%, transparent) right / 32px 100% no-repeat local,
+			radial-gradient(farthest-side at 0 50%, rgba(17, 24, 39, 0.12), transparent) left / 10px 100% no-repeat scroll,
+			radial-gradient(farthest-side at 100% 50%, rgba(17, 24, 39, 0.12), transparent) right / 10px 100% no-repeat scroll;
+		background-color: var(--tabs-bg);
+	}
+
+	#lsfh-app .lsfh-nav .lsfh-tabs {
+		--tabs-bg: var(--white);
+	}
+}
+
+/* ─── ID that opens its records (disbursement ID) ─────────── */
+#lsfh-app .lsfh-id-link {
+	padding: 0;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+	color: var(--p-dk);
+}
+
+#lsfh-app .lsfh-id-link code {
+	font-size: var(--fs-sm);
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-underline-offset: 3px;
+	transition: text-decoration-color 0.12s var(--ease);
+}
+
+#lsfh-app .lsfh-id-link:hover code,
+#lsfh-app .lsfh-id-link:focus-visible code {
+	text-decoration-color: currentcolor;
+}
+
+#lsfh-app .lsfh-id-link:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+	border-radius: var(--radius-xs);
+}
+
+/* ─── Disbursement ID cell and its fee icon ───────────────── */
+#lsfh-app .lsfh-id-cell {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+#lsfh-app .lsfh-fee-btn {
+	width: 26px;
+	height: 26px;
+	flex: 0 0 auto;
+}
+
+#lsfh-app .lsfh-fee-btn--none,
+#lsfh-app .lsfh-fee-btn--rename,
+#lsfh-app .lsfh-fee-btn--balance {
+	border: 1px solid var(--border);
+}
+
+#lsfh-app .lsfh-fee-btn--none:hover,
+#lsfh-app .lsfh-fee-btn--none:focus-visible,
+#lsfh-app .lsfh-fee-btn--rename:hover,
+#lsfh-app .lsfh-fee-btn--rename:focus-visible,
+#lsfh-app .lsfh-fee-btn--balance:hover,
+#lsfh-app .lsfh-fee-btn--balance:focus-visible {
+	color: var(--p-dk);
+	background: var(--p-lt);
+	border-color: var(--teal-400);
+}
+
+#lsfh-app .lsfh-fee-btn--ok {
+	color: var(--p-dk);
+}
+
+#lsfh-app .lsfh-fee-btn--short,
+#lsfh-app .lsfh-fee-btn--over,
+#lsfh-app .lsfh-fee-btn--many,
+#lsfh-app .lsfh-fee-btn--review {
+	color: var(--gold-dk);
+	background: var(--gold-lt);
+	border: 1px solid var(--amber-400);
+}
+
+/* ─── On/off check mark (Reconciled, Filed, Balanced) ──────── */
+#lsfh-app .lsfh-check-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	border: 1.5px solid var(--border-md);
+	border-radius: 50%;
+	background: transparent;
+	color: transparent;
+	cursor: pointer;
+	transition: background 0.12s var(--ease), border-color 0.12s var(--ease), color 0.12s var(--ease);
+}
+
+#lsfh-app .lsfh-check-toggle--on {
+	border-color: var(--p);
+	background: var(--p);
+	color: var(--white);
+}
+
+#lsfh-app .lsfh-check-toggle--off:hover,
+#lsfh-app .lsfh-check-toggle--off:focus-visible {
+	border-color: var(--p);
+	color: var(--teal-400);
+}
+
+#lsfh-app .lsfh-check-toggle:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}
+
+
+/* ─── Bank tie-out ───────────────────────────────────────── */
+#lsfh-app .lsfh-bank-steps {
+	display: flex;
+	gap: 6px;
+	margin: 0 0 20px;
+	padding: 0;
+	list-style: none;
+	font-size: var(--fs-cmp);
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-bank-steps li.active {
+	font-weight: 700;
+	color: var(--p);
+}
+
+#lsfh-app .lsfh-bank-steps li + li::before {
+	content: "›";
+	margin-right: 6px;
+}
+
+#lsfh-app .lsfh-bank-totals {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+#lsfh-app .lsfh-bank-totals > div {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 10px 12px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+}
+
+#lsfh-app .lsfh-bank-layout {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 12px 20px;
+	margin: 16px 0;
+}
+
+#lsfh-app .lsfh-bank-fieldset {
+	margin: 16px 0;
+	padding: 12px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+}
+
+/* !important: the app resets every h3's margin to 0 !important, so without it
+   the Bank headings had no space above them. */
+#lsfh-app .lsfh-subheading {
+	margin: var(--space-6) 0 var(--space-1) !important;
+	font-size: var(--fs-lg);
+}
+
+#lsfh-app .lsfh-subheading:first-child {
+	margin-top: 0 !important;
+}
+
+#lsfh-app .lsfh-bank-item {
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+	padding: 2px 0;
+}
+
+#lsfh-app .lsfh-bank-item__date {
+	flex: 0 0 64px;
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-bank-item__text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+#lsfh-app .lsfh-bank-pick-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+#lsfh-app .lsfh-bank-pick__list {
+	max-height: 280px;
+	margin: 8px 0 0;
+	padding: 0;
+	overflow-y: auto;
+	list-style: none;
+}
+
+#lsfh-app .lsfh-bank-pick__list label {
+	display: flex;
+	gap: 8px;
+	align-items: baseline;
+	padding: 4px 0;
+	cursor: pointer;
+}
+
+#lsfh-app .lsfh-bank-option {
+	display: block;
+	margin: 8px 0 12px;
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-bank-progress {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 16px;
+	align-items: center;
+	margin: 0 0 12px;
+}
+
+#lsfh-app .lsfh-bank-progress__text {
+	flex: 1 1 auto;
+	font-weight: 600;
+}
+
+#lsfh-app .lsfh-bank-progress__chips {
+	display: inline-flex;
+	gap: 6px;
+}
+
+#lsfh-app .lsfh-bank-mark {
+	display: inline-flex;
+	margin-left: 4px;
+	vertical-align: middle;
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-shared-check {
+	margin: 4px 0 0;
+}
+
+#lsfh-app .lsfh-bank-todos {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#lsfh-app .lsfh-bank-todo {
+	margin: 0 0 12px;
+	padding: 12px 16px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	background: var(--surface, #fff);
+}
+
+#lsfh-app .lsfh-bank-todo__title {
+	margin: 0 0 4px;
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-app .lsfh-bank-todo__cols {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 8px 24px;
+	margin: 8px 0;
+}
+
+#lsfh-app .lsfh-bank-pairs {
+	margin: 4px 0 8px;
+	padding-left: 18px;
+	list-style: disc;
+}
+
+/* ─── Vendors tab ───────────────────────────────────────────── */
+#lsfh-app .lsfh-vendor-intro {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0 0 12px;
+}
+
+#lsfh-app .lsfh-vendor-box {
+	margin: 0 0 16px;
+}
+
+#lsfh-app .lsfh-vendor-box .lsfh-stats {
+	grid-template-columns: repeat(5, 1fr);
+	margin: 0;
+	padding: var(--space-4);
+}
+
+@media (max-width: 1100px) {
+
+	#lsfh-app .lsfh-vendor-box .lsfh-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+#lsfh-app .lsfh-vendor-sends {
+	padding: 8px 16px 12px;
+}
+
+#lsfh-app .lsfh-vendor-group {
+	margin: 0 0 16px;
+	padding: 12px 16px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+}
+
+#lsfh-app .lsfh-picker-list {
+	max-height: 180px;
+	overflow-y: auto;
+	margin: 4px 0 0;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+}
+
+#lsfh-app .lsfh-picker-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 10px;
+	font-size: var(--fs-cmp);
+}
+
+#lsfh-app .lsfh-picker-row.taken {
+	color: var(--muted);
+}
+
+#lsfh-app .lsfh-picker-note {
+	margin-left: auto;
+	color: var(--muted);
+	font-size: var(--fs-sm);
+}
+
+/* ─── Bank: which way the money moved ─────────────────────── */
+#lsfh-app .lsfh-bank-dir {
+	display: inline-flex;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+
+#lsfh-app .lsfh-bank-item .lsfh-amount,
+#lsfh-app .lsfh-bank-pick__list .lsfh-amount {
+	white-space: nowrap;
+}
+
+#lsfh-app .lsfh-bank-direction,
+#lsfh-app .lsfh-bank-direction-row th {
+	font-size: var(--fs-lg);
+	font-weight: 600;
+	text-align: left;
+}
+
+#lsfh-app .lsfh-bank-direction {
+	margin: var(--space-4) 0 var(--space-2);
+}
+
+#lsfh-app .lsfh-bank-direction.is-in,
+#lsfh-app .lsfh-bank-direction-row.is-in th {
+	color: var(--p-dk);
+}
+
+#lsfh-app .lsfh-bank-direction.is-out,
+#lsfh-app .lsfh-bank-direction-row.is-out th {
+	color: var(--alert);
+}
+
+#lsfh-app .lsfh-bank-direction .lsfh-meta,
+#lsfh-app .lsfh-bank-direction-row .lsfh-meta {
+	font-weight: 400;
+}
+
+#lsfh-app .lsfh-bank-filter {
+	display: inline-flex;
+	gap: var(--space-1);
+	margin: 0 0 var(--space-3);
+}

@@ -1,0 +1,25 @@
+name: Attach the plugin zip to a release
+
+# When a release is published, build the zip the plugin directory expects: one folder named leftstack-financial-hub
+# that holds only what the plugin needs (everything listed in .distignore is left out), and attach it to the release.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the zip
+        run: |
+          mkdir -p build/leftstack-financial-hub
+          rsync -a --exclude-from=.distignore ./ build/leftstack-financial-hub/
+          cd build && zip -r "leftstack-financial-hub-${{ github.event.release.tag_name }}.zip" leftstack-financial-hub
+      - name: Attach it to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" build/leftstack-financial-hub-*.zip --clobber

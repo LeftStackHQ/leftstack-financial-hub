@@ -1,0 +1,16 @@
+node_modules/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# wp-env local overrides (machine-specific, never committed)
+.wp-env.override.json
+
+# Release zips
+dist/
+
+dev/
+
+# MkDocs build output
+site/

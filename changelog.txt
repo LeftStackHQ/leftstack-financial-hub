@@ -1,0 +1,500 @@
+LeftStack Financial Hub: full changelog
+
+= 1.19.0 =
+* New: Expenditures, Vendors tab: choose a date range and download the report as a CSV
+* New: Privacy tools for donor records. WordPress's Export and Erase Personal Data tools now find contributions by email address. Erasing removes nothing and says the records are kept as campaign financial records. Only administrators can use them. Suggested privacy policy text is added
+* Change: The unused fee total stored on each payout is removed from the database. It updates by itself the first time a page loads after the update
+* Change: Every file download now goes through one shared routine, tested in a real browser
+* Change: Plugin Check reports no findings. Added a contributor setup that works from a fresh clone (seed script, plugin-only wp-env file)
+
+= 1.18.0 =
+* New: Expenditures has a Vendors tab. It shows what you spent with each vendor against what was raised, by month and by send, with cost per dollar raised. Vendors can be grouped, and fundraising pages can be grouped with them. Fee expenses are left out of spend
+* Change: The ActBlue sync and the donation import fill in a phone number or email that was blank on a donor, never overwriting one you already have, and the result says how many were added. They also say how many payout bank references were filled in
+
+= 1.17.0 =
+* New: Local is a fifth election, for PACs and party committees that do not report by election. A Settings switch turns elections off: the election fields and limits are hidden, and new donations and filing periods become Local. Existing records are never changed
+* New: Organization types. Choose PAC, party committee, union, business or other on an organization's donation. PACs and party committees are exempt from the organization contribution limit. Donors, the dashboard and refunds carry the type
+* New: A warning appears when a donation puts a donor over a contribution limit, both when you enter it and in the ActBlue sync result
+* New: Before you file has a Compare with the state section. Save the list the state shows for the period as CSV (or tab separated), choose it, and the Hub shows what is missing, extra or different. It reads the state's own public results export as well as the state's bulk upload format
+* New: Before you file shows how many payouts in the period are balanced to the bank, and the State Report window warns while some are not. The payouts table has a Notes column
+* Change: Auto-Allocate shows the unitemized total net of refunds
+* Change: The state export and the Before you file check now share one rule for which contributions a report holds and when an address is missing. The downloaded files are unchanged
+* Change: A filing period whose name and election disagree gets a note. Custom election names are gone: periods use the five listed elections
+
+= 1.16.0 =
+* New: The Before you file tab lists the periods that need an amendment. When a donation in a period that was already filed is refunded, the refund is listed under that period until you mark it reported (amend the period on the state site first). "Mark reported" sets the refund's ordinary Filed status; nothing is sent to the state. Refunds with no original donation, or whose original has no filing period, are listed apart
+* Change: Filing a payout no longer marks a refund Filed when its original donation is Filed or it has no original, so these refunds stay on the amendments list until you mark them reported. Every other donation in the payout still follows the payout
+* Change: Refund cleanup: one rule for what counts as a refund in the donation form and list, the "Donation not found." message is translatable, and an old fix for refunds saved with a positive fee (no longer needed) is removed from the payout sync
+
+= 1.15.0 =
+* New: Donations has a "Before you file" tab. Pick a filing period and it lists, by donor and with names, the contributions that would go in the state report and are missing a name, street, city, state or ZIP, and for an individual an occupation or employer. Each contribution has an Edit button that opens the usual form. It only reads: the state export is unchanged
+* New: "Best efforts" on that tab records that you asked a donor for their occupation and employer, with the date and a note. One record covers every gift from that donor, and the donor stops being listed for those two items. Remove the record to list them again
+* Change: The Donors list and the Dashboard now share one rule for which donations belong to the same donor (no change in what they show)
+* Database: adds a table for the best-efforts records (database version 1.21), created automatically
+
+= 1.14.0 =
+* New: The donation form has a Filing Period field. It follows the contribution date when you change it, unless you picked a period by hand, and it is locked once the donation is filed. A date outside the chosen period shows a note
+* Change: When two filing periods cover the same date, the shortest one is used everywhere: in the forms, when records without a period are placed, and for expenses and in-kind gifts (they used to take the first match)
+* Change: A payout is labelled with the filing period most of its donations are in, not the period with the highest ID. The label updates the next time the ledger syncs
+* Change: The expense and in-kind forms share one Filing Period field with the donation form
+
+= 1.13.0 =
+* New: Find the original gift when you enter a refund. At the top of a new entry, "Refunding a gift? Find the original" searches by donor name, order number (such as AB402867556, or just its digits) or amount, and shows each match with its receipt number. Picking one turns the form into a refund of it, filled the same way as the Refund button on a row. When several gifts look the same (same donor, amount and day), each is flagged so you can tell them apart by the receipt number. A recurring donor reuses one receipt number every month, so one number can list several gifts
+* Change: A refund of a gift that did not come through ActBlue now starts with a fee of 0, with a note to match the payout net to your bank. ActBlue returns its fee on a refund, so its refunds still copy the original's fee. Democracy Engine kept the fee, which left one payout off the bank by $2.15
+* Change: The donations search, and the exports that use it, also finds a gift by its receipt (order) number
+* Change: The fee total on the Disbursements list now comes from the same place as the fee state, so the two cannot disagree
+
+= 1.12.0 =
+* New: Each payout now carries the name of who pays it out (ActBlue, OATH, Democracy Engine, WinRed and so on). It shows under the disbursement ID on the Disbursements tab, and you click it to change it. A payout with no name shows "+ add processor" when you point at its row
+* New: The Disbursements CSV import asks "Who pays this out?". It is filled in for a file the app recognises when the campaign already has a name for that source, and it is required for a file the app does not recognise. ActBlue files do not ask, because the ActBlue sync names its own payouts
+* Change: A payout's fee expense is named from its own processor first, then from the name your other payouts of that source already use, then a default. Payouts that already exist keep their current names until you set one, and a later sync never overwrites a name you set
+* Database: adds a processor column to the disbursements table (database version 1.20), upgraded automatically
+
+= 1.11.5 =
+* Fix: The Mixed badge on Disbursements no longer flags a deposit just because its date falls in a different period than its donations. It now means the deposit holds donations from a period other than the Filing Period shown on its row
+* Fix: A payout date you set by hand now stays. It is copied to the donations in that payout, as the Filing Period already is, so the next sync no longer puts the file's date back. Re-importing the same file still applies the file's date, because re-importing is how you correct data
+* Change: Deleting a filing period that records are still filed under asks first and says how many (donations, expenditures, in-kind contributions, deposits). If you go ahead, those records go back to no period and the next ledger sync places them by their dates. Before, the period was deleted and the records kept pointing at it. Deleting a period that does not exist now says so instead of reporting success
+
+= 1.11.4 =
+* Fix: The Tennessee export reports a refunded donation at its donation amount. It used to print the amount the donor kept (0.00 for a full refund), but Tennessee wants the contribution as received, with the refund reported separately. A fully or partly refunded donation now exports at its own amount; refunds are still not in the file, and nobody is left out. Re-export a period that included a refunded donation to get the corrected amount
+
+= 1.11.3 =
+* New: Fix fees marks a fee expense Balanced when its payout is already Reconciled, which a fee expense never picked up if the payout was reconciled before the expense was linked. A blank Posted date is filled from the payout's Date Received unless that date is in the future. The confirmation shows how many first. A Balanced mark you set by hand is never removed, and a payout that is not reconciled is never touched
+* Change: Linking an older fee expense to a payout that is already reconciled also marks it Balanced in the same click
+* Change: A fee expense that needs this shows a double check mark on its payout row
+
+= 1.11.2 =
+* Fix: On the Bank review the Confirm button now sits in a summary bar under each table (how many are ticked, and the button) instead of against the card edge, and the section headings have their space above them again
+* Change: A filing period has to name its election. The New Period form no longer assumes Primary: it follows the name (Pre-General is General) or asks you to choose, and a period with no election is refused
+* New: When you add a period or change its election you are asked whether to set the election of the donations dated inside it. The prompt says how many will change, never touches a filed donation, leaves the donations of a shorter period inside it alone, and a payout's election follows when all of its donations agree
+
+= 1.11.1 =
+* New: Fix fees also renames a fee expense whose payee is still the payout number (the old fee button named it that way) to the processor that paid the payout, using the name your campaign already uses for that processor's fees (ActBlue, OATH, Democracy Engine). The confirmation shows how many will be renamed first. It never runs on its own, and it only changes a payee that is still the payout number, so a name you typed is kept
+* Change: A fee expense that needs this shows a pencil on its payout row, and Fix fees counts it
+* Fix: The name for a processor's fee expenses is picked from the most common name in use, counting each fee expense once, so a payout with many donations no longer outvotes the others
+
+= 1.11.0 =
+* New: Each payout has one fee expense that stays in step with the fees on its donations. It is created automatically for a new payout, named for the processor (ActBlue, Stripe or Democracy Engine), and its amount changes when a donation or refund in the payout changes. Marking the payout Reconciled balances its fee expense
+* New: Fix fees on the Disbursements tab shows what it would create, link or correct (and the total) and asks first. It also links an older fee expense to its payout when the amount matches and the dates are within three days. Payouts from before this version are only changed when you use it
+* Change: The fee icon beside a payout fixes a missing or wrong fee expense by changing the one expense, instead of adding an extra adjustment expense
+* New: When a payout has more than one fee expense, one click (after a confirmation) keeps the oldest and removes the extras. An older expense that might belong to a payout is flagged for a look instead of being guessed
+* New: Expenditures has a Payout column (hide it from the Columns menu) and a fee expense's detail panel shows the payout it belongs to
+
+= 1.10.1 =
+* Change: On the Bank page, the list of bank lines that need you is now a To do list. Each card says what is going on and what to do: add the missing record to the Hub, pair some of several deposits of the same amount and add the rest, pair these (with a suggested pairing you confirm with one click), a close amount, or dates that do not fit
+* New: Add to Hub on a bank line opens the usual add-expense or add-donation form already filled in from the bank line (date, amount, check number, payment type), so the new record pairs with its bank line at once
+* Change: A date you typed from your bank statement (a payout's Date Received, an expense's Posted date, a donation's Date Deposited) is now trusted: it pairs only with the bank line on that date, give or take a day (three for an expense). A typed date that no bank line of that amount fits is flagged for a look instead of being matched or ignored
+* Change: A check or cash donation with no Date Deposited yet can match a deposit made any time after it was received, and checks and expenses written up to about three months before the bank file are found by the bank line that cashed them. Older records are never listed as not at the bank
+* Fix: Unrelated bank lines that happened to add up to an amount no longer take a record away from the lines of exactly that amount
+* Change: The Not at the bank tab explains each record in plain words, including a date that does not match the bank
+
+= 1.10.0 =
+* New: Bank page. Add a bank account, upload its CSV (the file is read in your browser and the layout is remembered), and check the control totals against your statement. The review lists suggested matches with the reason for each: clear matches are confirmed together, groups (for example two expenses on one check) are checked one at a time, and anything else is matched by hand with a running difference and a written reason when the amounts differ. A Matched tab lists confirmed matches with Undo, and a Not at the bank tab lists outstanding checks (oldest first) and other records with no bank line
+* New: Confirming a match marks what it covers as balanced (a payout is reconciled, which balances its donations) and, with the tick box on, fills blank Date Received, Posted and Date Deposited dates from the bank. A date you typed is never changed, and Undo reverses only what the match set
+* New: Disbursements now has a Status column (Filed, Matched, Matched with a difference, Balanced, Synced), a progress line with a Filing period choice and a Needs attention shortcut. Filing a payout that is not matched or balanced asks first, and names any other period it holds donations from. The Unbalanced total under the table now counts every payout, not only the rows on the page
+* New: A small bank icon beside the Balanced mark on expenses and donations that are matched to the bank
+* New: In the expense form, a check number that other expenses already use shows what the check also covers and what it totals
+* Fix: The Tennessee state export no longer stops with an error when a donation has no ZIP code; the ZIP is left blank
+* Change: Each screen now loads its own code when its page opens instead of one large file, so pages open a little faster
+* Change: Adds four database tables for the bank tie-out (created automatically on update). Bank lines are kept as financial records for audits: the privacy tools list them on request and report them as retained rather than erasing them
+
+= 1.9.124 =
+* Fix: Searching or sorting a list quickly no longer shows the results of an earlier search: a slow earlier answer can no longer replace a newer one (Donations, Donors, Disbursements, Expenditures, Payees, In-Kind, the refund lookup, the donor search box and the State Report check)
+* Fix: On the Donors list, Clear now also resets the Everyone / Individuals / Organizations selector
+* Fix: Opening one disbursement's transactions now also clears an amount range left in the filters, and the disbursement banner's Clear returns to the first page
+* Change: All requests to the server go through WordPress's own request helper (@wordpress/api-fetch). Edits and deletes are sent the way WordPress sends them (as POST with the method-override header); nothing changes on screen
+
+= 1.9.123 =
+* Chore: Internal tidying with no change to how anything looks or behaves: the shared screen pieces are split into small files, the Dashboard is split into its cards and lists, the filing-period rule for the Expense and In-Kind forms is shared, and the last code-style suppressions are removed
+
+= 1.9.122 =
+* Fix: New donation, expense and in-kind forms, the ActBlue sync dialog and the date shortcuts (This week, This month, Year to date and so on) now use today's date in the site's time zone (Settings > General > Timezone). Before, they used the UTC date, so after about 7 pm US Central they opened with tomorrow's date. Set the site's time zone to your city so the plugin and the server agree on what today is
+* Chore: The Donations and Expenditures screens are split into smaller pieces (toolbar, bulk bar, table row, totals) with their loading and actions in shared helpers; no change to how they look or behave
+
+= 1.9.121 =
+* Chore: The donations CSV import pop-up, the Add/Edit Donation form and the Disbursements table are split into smaller pieces (steps, form sections, one row component) and their loading and saving logic is shared in small helpers; no change to how any of them look or behave
+
+= 1.9.120 =
+* Change: The ActBlue sync result now reads "Sync finished. N new contributions imported." and is easier to scan
+* Chore: Page, search, sort and filter handling on the Donations, Donors, Disbursements, Expenditures, Payees and In-Kind lists is now shared in one place instead of repeated in each screen; no change to how the lists look or behave
+
+= 1.9.119 =
+* Fix: Importing donations from a CSV now reads a quoted cell that contains a line break (for example a two-line address) as one cell. Before, it split the row in two and shifted every later column. Spaces around cells are trimmed, and a file with a header but no data rows now says so
+* Chore: The admin screens are split into one file per component, the CSV import for Expenditures and In-Kind shares one pop-up, and repeated page controls and requests share one definition; no change to how the screens look or behave
+
+= 1.9.118 =
+* Feature: Disbursements: the Disbursement ID opens that payout's transactions, and a small receipt icon beside it logs the payout's processing fees as an expense. The icon shows whether the fees are already logged, and warns when the logged total does not match
+* Change: Reconciled is now called Balanced on Disbursements, matching the flag it sets on each donation
+* UI: Balanced and Filed use a clear on/off circle (solid teal when on, an empty ring when off), also on the Expenditures Balanced column
+* UI: Filing Periods row buttons sit in a row
+* Chore: The REST API code is split into one class per area (donations, expenditures, periods and so on) with a small router; no behaviour change
+
+= 1.9.117 =
+* Fix: The beginning balance for a period or month no longer subtracts processor fees twice
+* Feature: Payments dated in the future show as Scheduled on the dashboard, with the balance after they are paid
+* Feature: Expenditures have a Posted, Scheduled or Pending status that can be filtered; a scheduled payment cannot have a Posted date
+* Feature: Adding or editing a filing period offers to move the records dated inside it; where periods overlap, the shorter one is used for new records
+* Feature: Search on Donations, Expenditures and In-Kind also finds amounts
+* UI: Lighter look, tables become cards on a phone, and every list has the same totals bar below it
+* Removed: Backup & Restore and Balance Audit
+* Fix: Donation splits are all-or-nothing; the ActBlue password is stored exactly as typed and is no longer loaded on every request; page sizes of 0 no longer break lists
+* Chore: uninstall.php keeps finance records unless LSFH_REMOVE_DATA_ON_UNINSTALL is set; code follows the WordPress coding standard
+
+= 1.9.112 =
+* Add: the Donors list can be filtered to organisations and PACs, or to individuals. It is a separate control from Maxed Out / Repeat Donors, so the two combine — maxed-out organisations are measured against the organisation limits the view already reads
+
+= 1.9.111 =
+* Fix: the export's Fund Code defaulted to an option that left FUNDCODE empty, and FUNDCODE is the only field telling the state whether a contribution counts toward the primary or the general. A code must now be chosen before anything downloads, and the "leave blank" option has been removed — it had no documented purpose and every contribution in a candidate's filing carries an election
+* Fix: choosing P or G stamped that code on every exported row regardless of its own election, because the fund code never filtered anything. Picking P on a mixed file would have filed general contributions as primary with nothing on screen saying so. P and G are now refused when the rows disagree, naming how many
+* Add: the export preview reports the election split — how many Primary, how many General, and how many carry neither and would export with an empty fund code
+
+= 1.9.110 =
+* Fix: organisations whose name contained "PAC" were dropped from the state export. Four organisations worth $3,650 were missing from a filing with nothing on screen saying why. Tennessee loads organisations and PACs on a schedule separate from individuals and removes PACs from the individual upload itself, so they are carried now, and the export reports which ones are in the file
+* Add: the export can be limited to individuals only, or to organisations and PACs only — the two sets Tennessee uploads separately. The filename carries the scope, so the two downloads no longer overwrite each other
+* Fix: an imported file with no payment type column stamped every row ActBlue, so 690 Stripe and 4 Democracy Engine donations recorded the wrong payment type while the same import set the source correctly. A row that is not ActBlue now records "Other"
+* Change: Democracy Engine imports store the "Other" source instead of one the source filter never offered, so those donations can be filtered at all. Its report looks nothing like a Stripe payout export, so it is not recorded as Stripe either. ActBlue keeps its own source, whether synced or uploaded by hand
+* Change: "Manual" now reads "Other" throughout. It is the catch-all for anything entered by hand — ACH, a wire, a Democracy Engine report — and the old label named a data-entry method rather than a kind of money
+
+= 1.9.109 =
+* Add: when an imported file reports no payout date, the mapping screen asks for one before importing. Democracy Engine leaves "Transmittal Payment Posted On" empty until a transmittal settles, and the date it settles on may never appear in a file that can be re-imported. Setting it once applies it to the whole file. Leaving it blank is allowed — the payout stays Pending until a date arrives
+* Add: a disbursement's date can now be set by hand from the Disbursements table, alongside Date Received and Bank Reference. A date supplied by a file still wins, so this fills a gap the provider left rather than overriding what the provider reports
+
+= 1.9.108 =
+* Fix: a payout with no date sorted to the last page. Democracy Engine leaves the transmittal's posted date empty until it settles, and MySQL sorts empty dates last on a descending sort, so a payout created by an import appeared not to exist. Payouts still awaiting payment now sort first, and the date column reads "Pending" rather than a dash
+* Change: the election is no longer pre-selected when syncing from ActBlue or importing a CSV. Both apply one election to every contribution they create, so neither will run until one is chosen. The split dialog keeps its Primary and General defaults, where the two values are the halves being split
+
+= 1.9.107 =
+* Change: Election and Report Type are no longer pre-selected when adding a donation by hand. Both open empty and the save is refused until each is chosen, so a contribution cannot be filed under the wrong election because nobody looked at a field that was already filled in. Editing an existing donation is unaffected, and recording a refund still copies the election of the contribution it reverses
+* Add: a disbursement whose contributions are for more than one election is now marked in the Election column, with the tally in its tooltip. Each contribution files under its own election regardless of the payout's label, so this only surfaces the disagreement rather than changing anything
+
+= 1.9.106 =
+* Fix: the election chosen when syncing from ActBlue was written to the contributions but never to the disbursement they belong to, so every newly synced payout showed an empty Election column. A payout now takes the election its contributions carry, provided they all agree; a payout mixing primary and general contributions stays blank rather than being guessed at, and an election set by hand is never overwritten. Existing payouts pick theirs up on the next Rebuild Ledger
+* Change: the ActBlue sync dialog no longer says the election is "applied to every row synced" — it applies to contributions the sync adds, while anything already present is skipped as a duplicate and keeps the election it has
+
+= 1.9.105 =
+* Fix: the state export dropped any contribution whose refunds cancelled it out, with no period bound — so re-exporting an already-filed quarter quietly omitted a contributor who had been refunded later. Refunded contributors are now reported at the amount actually kept, 0.00 when the refund was total, and are never dropped
+* Fix: a partial refund exported at the original amount; a $200 contribution refunded $50 now reports $150 rather than $200
+* Fix: CSV imports wrote every donor as an individual, so an organization exported with CONTRIBUTORTYPE = I and an imported PAC was never excluded from the individual contributions schedule
+* Add: import reads the organization flag and organization name from Democracy Engine exports, and maps the common column names for hand-built files
+
+= 1.9.104 =
+* Add: CSV import recognises ActBlue, Stripe payout and Democracy Engine exports and maps their columns automatically, including the deposit fields each vendor names differently (Disbursement ID / payout_id / Transmittal Reference)
+* Add: import mapping screen groups fields, shows a real value from the file beside each mapped column, and hides fields the file does not contain
+* Add: import refuses to run without Gross Amount and Contribution Date, and without the fee and disbursement columns unless the file genuinely lacks them
+* Fix: Democracy Engine imports created no deposit record and dropped the processing fee, recording each contribution at its gross rather than the amount that reached the bank
+* Fix: Democracy Engine rows were labelled as ActBlue
+* Fix: ActBlue's "Check Number" column is the cheque ActBlue writes to the campaign, not a donor cheque, and is no longer mapped as one
+* Remove: Election Type and Reporting Status from import mapping — neither appears in any vendor export, Election Type is set by the Default Election dropdown, and Reporting Status asserts that a filing happened
+* Fix: a refund is now dated when it happened and no longer inherits the original contribution's date, filing period or disbursement
+* Fix: refund counts on the Disbursements screen reached the browser as zero, so the refunded-amount badge never appeared; the two refund badges no longer double-count the same refund
+* Fix: disbursement sync reassigned filing periods by contribution date, splitting a payout across two periods when a contribution arrived in one quarter and was paid out in the next
+* Fix: a partial update to a donation or in-kind row reset fields it did not mention, including Balanced and Reporting Status
+* Fix: Auto-Allocate is always visible, disabled until a filing period is selected, rather than hidden entirely
+* Fix: several undefined array key warnings on import and in-kind entry
+* Change: unified design system — section headings in navy, one type ramp of nine sizes in place of thirty, three border radii in place of six, and WCAG AA contrast on every badge
+* Change: "Export for State Filing" is now "Export"; the search field no longer stretches across the toolbar
+* Fix: TN export documentation corrected — 13 columns, tab-delimited, not 14 columns of CSV
+
+= 1.9.103 =
+* Fix: wide tables now scroll horizontally within a height-capped viewport, so the scrollbar is reachable without paging to the bottom of the table
+* Fix: sticky column headers and a frozen leading column keep rows identifiable when scrolled right
+* Fix: all jsx-a11y lint errors (labels, click handlers, autofocus)
+* Fix: ESLint no longer hangs on built assets
+
+= 1.9.102 =
+* Fix: State Filing export ignored the active Transactions filters
+* Fix: ActBlue sync insert failure on long or malformed phone numbers
+
+= 1.9.101 =
+* Add: "select all matching" bulk action reaching beyond the current page
+* Add: fallback log file for ActBlue sync insert failures
+
+= 1.9.100 =
+* Fix: ActBlue sync silent failures, disbursement list refresh, and election type handling
+
+= 1.9.99 =
+* Fix: blank page when selecting a date filter on the Donations tab
+
+= 1.9.98 =
+* Fix: More and date-filter popovers clipped at the right edge of the viewport
+* Fix: custom date range inputs too narrow in the date filter popover
+
+= 1.9.97 =
+* Change: UI consistency pass across all tabs
+
+= 1.9.96 =
+* Fix: TN export download buttons hidden until preflight loads; prevents accidental unbatched download with empty Fund Code during recalculation
+
+= 1.9.95 =
+* Fix: TN export preflight now correctly returns row count; batch buttons appear properly when export exceeds 500 rows
+
+= 1.9.94 =
+* Feature: TN state export splits into 500-row batches when total exceeds Oracle's IN-clause limit; each batch downloads as a separate file
+
+= 1.9.93 =
+* Fix: Export button count now excludes refund rows so the number matches the actual rows exported
+
+= 1.9.92 =
+* Feature: Log Fees button on disbursements pre-fills payee with disbursement ID, paid by with campaign name, and date posted with date received
+
+= 1.9.91 =
+* Fix: Negative gross amounts (refunds) now display in red in the donations table and detail drawer
+
+= 1.9.90 =
+* Fix: Fully refunded donations excluded from both TN state and generic CSV exports; partial refunds still appear
+* Fix: All Events dropdown filter now displays clean slug instead of full URL
+* Feature: Log Fees button on disbursement rows creates an expense for processing fees in one click
+
+= 1.9.89 =
+* Change: Consolidated export to single smart button — state filing export for TN users, generic CSV export for others, with live filtered count displayed
+* Fix: Fundraising Page in disbursement drawer now renders as a clickable link; ActBlue URLs display clean slug as label
+* Fix: Non-ActBlue fundraising page values (bare names/slugs) display as plain text with no incorrect link
+
+= 1.9.88 =
+* Change: Left-align all table columns across all tabs for consistent header-to-cell alignment
+
+= 1.9.87 =
+* Change: Left-align all table columns for consistent header-to-cell alignment
+
+= 1.9.86 =
+* Change: Removed preview step from state export modal — direct Download button only
+* Fix: Download error now shown inline rather than as a confusing preview failure message
+
+= 1.9.85 =
+* Fix: Export modal shows warning with Settings link when no filing state is configured; fund code/format/preview all gated behind valid state
+* Change: Fund code "All" option derives P/G per row from each contribution's election_type (replaces "P + G — Both")
+* Fix: State selector removed from export modal (managed in Settings only)
+* Fix: Format select no longer clipped; "preferred" label removed
+
+= 1.9.84 =
+* Feature: Export for State Filing — replaces old TN Report button; multi-state architecture (Tennessee live, others extensible); tab-delimited preferred per TN spec, CSV also available
+* Feature: Filing State setting in General → Reporting pre-selects state in export modal
+* Fix: CONTRIBUTORTYPE now derived from donor_type field; FUNDCODE corrected to P/G (not P{year}/G{year})
+* Fix: Unitemized contributions excluded from state export
+* Change: Imports always default to itemized; Auto-Allocate is the only mechanism for marking unitemized
+* Cleanup: Removed dead export_tn_report endpoint and method; removed window.LSFH.unitemizedThreshold
+
+= 1.9.83 =
+* Feature: TN Import CSV modal — fund code selector (P/G + election year), preflight preview showing total rows, skipped PACs, and missing address warnings; post-download PAC notice
+* Fix: TN contributions export now uses CSV comma-delimited format with conditional quoting; CONTRIBUTORTYPE derived from empty last_name; PAC filtering (orgs with "PAC" in name skipped); zipFormatted used for correct zero-padding; FUNDCODE user-selected not auto-derived; filename tn-import-[date].csv
+* Fix: Added electionYear to window.LSFH script data
+* Fix: Added tn_csv_string() helper (conditional quoting — only when field contains comma/quote)
+
+= 1.9.82 =
+* Fix: TN Report export — amountCents now zero-padded to 2 digits ($4.09 exports "09" not "9")
+* Fix: TN Report export — amount field no longer includes $ sign or comma separators (plain "1000.00" not "$1,000.00")
+
+= 1.9.81 =
+* Fix: Revert unspecified uppercase assumption from TN export — TN requirements do not require uppercase; state abbreviation (always 2-letter) remains uppercase
+
+= 1.9.80 =
+* Fix: TN contributions export outputs tab-delimited format (TN preferred); FUNDCODE year derived from election date setting; ZIP uses 5-digit raw field; added tsv_string() helper
+
+= 1.9.79 =
+* Feature: TN bulk contribution import CSV export — new "TN Import CSV" button in Donations toolbar generates a CSV in Tennessee's required import format (CONTRIBUTORTYPE, LNAME, FNAME, STREET, ADDR2, CITY, STATE, ZIP, OCCUPATION, EMPLOYER, AMT, BATCHDTE, FUNDCODE); respects active filters; excludes refunds; maps I/O contributor types and P/G fund codes automatically
+
+= 1.9.78 =
+* Security: Backup export/restore endpoints now require manage_options (admin only); previously reachable by Finance Managers who could read credentials or wipe all data
+* Fix: update_donation and split_donation now return a proper 404/500 error instead of a fatal PHP error when a DB operation fails
+* Fix: list_periods computed_beginning_balance now correctly falls back to global beginning balance when start_date is NULL or zero-date
+* Fix: dateInitialized in ExpenseModal changed from useState to useRef — eliminates stale-closure and double-render on first date change
+* Fix: Settings load() functions now surface fetch errors to the user instead of silently rendering empty tables
+* Fix: BudgetView dead categories prop removed from signature and call site
+* Chore: Settings tab bar consolidated to use standard lsfh-tabs/lsfh-tab CSS classes (removed duplicate lsfh-settings-tabs/lsfh-stab)
+* Chore: Hardcoded hex colors in admin.css replaced with CSS tokens (badge-purple, badge-blue, balance card gradient, checked row tint)
+* Chore: Added lsfh-alert-box utility class; removed 7-property inline style from BackupTab
+* Chore: Added fmtC formatter to Settings component; replaced ad-hoc currency formatters
+
+= 1.9.77 =
+* Chore: Removed phases feature entirely (table, REST endpoints, UI) — not needed; DB migration drops lsfh_phases table on existing installs (DB version 1.15)
+
+= 1.9.76 =
+* Feature: Budget tab on the Expenditures page — three sub-tabs: Category Tracker (cycle budget vs. actual spend per category with On track / Watch / Over budget badges), Phase Plan (campaign timeline phases with budget allocation and CRUD), and Filing Periods (compliance summary)
+* Feature: Category Tracker month filter — select any month to see per-category spend and share of month total; bars scale to largest category that month
+* Feature: Election Day Projection summary card in Budget tab — shows current balance alongside the configured election date
+* Feature: Phase Plan — Launch, Primary, General, Pre-Election, and GOTV phases seeded by default; add, edit, and delete phases with name, dates, budget amount, and color
+* Feature: Budget categories now support a Cycle Budget amount — set per-category budgets in Settings → Budget Categories; amounts shown on each category card
+* Feature: Election Date setting added to Settings → General (used for the Budget tab projection card)
+* Fix: Admin notices from third-party plugins are now hidden on Financial Hub pages via CSS rather than hook removal — WordPress core security and update notices remain registered and visible on all other admin pages (WP plugin guideline #11 compliance)
+* Chore: readme.txt stable tag synced to current version, External Services and Source Code sections added (WP plugin guideline #4 and #7 compliance)
+
+= 1.9.75 =
+* Feature: Budget categories now store a cycle budget amount (budget_amount column, DB version 1.14) — used by the Budget tab to compute per-category spend vs. budget
+* Feature: Election Date option (lsfh_election_date) added to settings and backup/restore
+
+= 1.9.70 =
+* Feature: Receipt uploads now limited to JPEG, PNG, and PDF — enforced both client-side (instant feedback) and server-side (MIME validation before WP media handling)
+* Feature: Receipt images auto-compressed on upload — resized to max 1500px on longest side at 85% JPEG quality, reducing a typical phone photo from ~6 MB to ~250 KB with no visible quality loss
+* Feature: 10 MB file size cap on receipt uploads with a clear error message
+* UI: Upload field now shows accepted formats and size limit as hint text
+
+= 1.9.69 =
+* Feature: Financial Hub Manager users are now redirected to the Financial Hub dashboard immediately after login — no more landing on the generic WordPress admin home
+* Feature: Admin menu cleanup for Financial Hub Manager role — irrelevant WordPress menu items (Posts, Media, Pages, Comments, Appearance, Plugins, Users, Tools, Settings) are hidden for staff-only users; admins see the full menu unchanged
+
+= 1.9.68 =
+* Fix: Expenditures page now preserves active tab (Transactions / Payees) on refresh and browser back/forward — URL ?tab= param synced via pushState, matching Donations behavior
+* Fix: Settings page now preserves active tab (General, Contribution Limits, Filing Periods, etc.) on refresh and browser back/forward — same URL sync pattern
+
+= 1.9.67 =
+* Feature: "Financial Hub Manager" WordPress role — granting Staff Access now assigns users the lsfh_manager WP role, which appears in the WP Users screen (same pattern as Volunteer Hub Manager); existing staff are picked up via legacy meta flag for backward compatibility
+* Fix: Staff list query now uses role-based lookup (faster) instead of meta_key scan
+
+= 1.9.66 =
+* Fix: Date fields across Financial Hub now accept pasted dates in any common format (MM/DD/YYYY, YYYY-MM-DD, "May 19 2026", etc.) and normalise automatically — previously the browser's native date input blocked all paste
+* Fix: Clearing Date Received in Disbursements now works — the backend was using isset() which silently ignores null; changed to array_key_exists() so sending null correctly removes the date
+* UI: Date Received (Disbursements) and Date Posted (Expenditures) inline edit fields now show a × clear button — no more needing to manually select and delete the date value
+
+= 1.9.65 =
+* UI: Import mapper "ActBlue Receipt ID" → "Receipt ID (e.g. ActBlue)" and "ActBlue Fee" → "Processing Fee (e.g. ActBlue)" — labels now reflect that non-ActBlue sources can also be imported
+
+= 1.9.64 =
+* UI: Donation CSV import mapper reorganized — fields now grouped into logical sections (Donor Identity, Address, Profile, Transaction, ActBlue/Disbursement)
+* UI: Email and Phone moved next to name fields in the mapper instead of near the bottom
+* UI: Removed "Date Deposited" from mapper — was redundant with "Disbursement Date" and caused confusion between three nearly-identical date fields
+* UI: "Payment Type" renamed to "Payment Method" to distinguish it from "Source" (Source = where donation came from; Payment Method = how it was paid)
+* UI: "Receipt ID (ActBlue)" renamed to "ActBlue Receipt ID" for consistency
+* UI: "Fundraising Page (Event)" renamed to "Fundraising Page" — the "(Event)" annotation was unclear
+* Fix: Removed overly broad 'status' auto-map hint from Reporting Status — was incorrectly matching generic "Status" columns from unrelated CSV formats
+* Fix: Template CSV column headers and example row were misaligned — values were mapped to wrong columns; both now match the updated field order exactly
+
+= 1.9.63 =
+* Fix: Donations sub-tab (Transactions / Donors / Disbursements) now persists across page refreshes — active tab is written to the URL (?tab=disbursements) so a refresh lands back on the same view
+* Fix: Browser back/forward buttons now navigate between Donations sub-tabs correctly instead of jumping to the previous WordPress admin page
+
+= 1.9.62 =
+* Fix: Expenditure CSV import now correctly resolves budget categories — was querying a non-existent table (lsfh_categories), causing all category lookups to fail silently
+* Fix: Bulk-update expenditures now executes a single UPDATE ... WHERE id IN (...) instead of one query per row — measurably faster on larger selections
+* Fix: Disbursements pagination now uses $wpdb->prepare() for LIMIT/OFFSET values
+* Fix: ActBlue sync polling loop now tracks a 55-second wall-clock deadline, preventing PHP timeout on shared hosts where set_time_limit() is ignored
+* Perf: Added filing_period_id index to donations, expenditures, and in-kind tables (DB version 1.12) — significantly faster period filtering on large datasets
+* Refactor: Removed dead $formats parameter from build_donation_where() — was accumulated but never used in any query
+* Chore: Removed empty hide_menu_items() no-op action hook
+* CSS: Replaced color-mix() (unsupported in Safari 15 / Firefox < 113) with a static hex equivalent for checked-row background
+* CSS: Replaced remaining hardcoded hex values in admin.css with design token vars (--alert-xlt, --border-lt, --border-md, --ink, --white, --border, --radius-sm)
+* CSS: Added --red-50, --slate-300, --alert-xlt, --border-md, --p-xlt tokens to tokens.css
+
+= 1.9.61 =
+* Fix: Settings → Filing Periods — edit row now uses table-layout: fixed with percentage column widths so inputs fill their cells without collapsing or expanding the table; columns stay perfectly aligned between view and edit mode
+
+= 1.9.60 =
+* Fix: WordPress dashboard widget Total Raised and Current Balance now match the Financial Hub dashboard — widget was summing net_amount (after fees); corrected to gross_amount to match the dashboard calculation
+* UI: WordPress dashboard widget title simplified to "Financial Hub: Campaign Snapshot" — removed emoji icon and em dash
+* UI: Expenditures — Posted column now matches Disbursements Date Received: click-to-edit with muted "+ Add date" prompt, Enter/Escape to confirm or cancel
+* UI: Settings → Integrations — connection status badge renamed from "Credentials saved" to "Configured"
+* Fix: Settings → Filing Periods — Beginning Balance info popover no longer clips at the right edge; anchored right with wrapping text
+* Fix: Settings → Filing Periods — edit row inputs now have constrained widths so Beginning Balance field stays under its column header
+
+= 1.9.59 =
+* UI: Expenditures — Posted column now matches the Disbursements "Date Received" pattern: shows muted "+ Add date" when empty, click to open an inline date input, Enter/Escape to confirm or cancel; replaced always-visible date picker with consistent click-to-edit interaction
+* UI: Settings → Integrations — connection status badge changed from "Credentials saved" to "Configured" for clearer meaning
+* Fix: Settings → Filing Periods — Beginning Balance info popover no longer gets clipped at the right edge; anchored right with wrapping text instead of centered nowrap
+
+= 1.9.58 =
+* Fix: ActBlue sync no longer falsely deduplicates recurring donations — recurring donors reuse the same Receipt ID each month, so the dedup check now matches on Receipt ID + contribution date (same logic as the manual CSV import); previously, all installments after the first were incorrectly skipped as duplicates
+
+= 1.9.57 =
+* Fix: ActBlue sync duplicate and pending counters now only reflect rows that fall within the user's chosen disbursement date range — rows from the wider API window (outside the range) are silently skipped and no longer inflate the "already in database" count
+
+= 1.9.56 =
+* Fix: ActBlue sync now filters by disbursement date (the date money hit the bank) instead of contribution date — the date range picker in the sync modal now filters on when ActBlue deposited funds, not when donors gave; rows outside the disbursement date window are excluded even if their contribution date falls within it
+* UI: ActBlue sync modal date fields relabeled "Disbursed from / Disbursed to" with an explanatory note so it's clear the range refers to bank deposit dates
+
+= 1.9.55 =
+* Fix: ActBlue sync now skips contributions without a Disbursement ID — only imports donations that have already been deposited to the bank; pending/undisbursed contributions are excluded
+
+= 1.9.54 =
+* Fix: ActBlue sync completely rewritten to use the correct CSV API — POST /api/v1/csvs to request a CSV export, poll until ready, download and parse (previous implementation used a non-existent JSON contributions endpoint, causing 404 errors)
+* Fix: ActBlue Test Connection now uses the same CSV API endpoint so 401/403 correctly indicates bad credentials instead of 404
+* Fix: ActBlue sync CSV column mapping supports all known ActBlue export column name variants (Date, Receipt Date, Billing Address 1, ZIP, Order Number, etc.)
+
+= 1.9.53 =
+* UI: Settings → Filing Periods — Beginning Balance info icon now shows a click-triggered popover instead of a hover tooltip; text shortened to "Leave blank to auto-compute from prior period activity."
+* Fix: ActBlue credential fields relabeled to Client UUID and Client Secret to match ActBlue API terminology
+
+= 1.9.52 =
+* UI: Expenditures — Transactions column order changed to Date, Payee, Category, Description, Method, Receipt, Amount, Posted, Balanced
+* UI: Expenditures — Posted date is now editable inline from the table row (no modal required); saves on change
+* UI: Expenditures — Category badges no longer show accent left border; use standard 1px border in category color
+* UI: Settings → Filing Periods — info icon next to Beginning Balance explains it is optional and auto-computed from prior period activity when left blank
+* Fix: Settings → Filing Periods — Beginning Balance column header now correctly right-aligns (CSS specificity fix)
+* Fix: Info icon tooltip now uses a span wrapper so browser tooltip fires reliably (title attribute on SVG elements is unreliable)
+* Chore: All inline styles extracted to admin.css CSS classes across Expenditures and Settings components
+
+= 1.9.51 =
+* Fix: ActBlue Sync modal now shows a proper error when credentials are not configured (WP_Error responses no longer read as success)
+* Feature: WordPress dashboard widget — Campaign Snapshot postbox shows Total Raised, Current Balance, and Expenditures with a View Contributions link directly to the Donations tab
+* UI: Settings → ActBlue tab renamed to Integrations (ActBlue shown as a labeled section within it, ready for future integrations)
+* UI: Settings → Integrations shows connection status badge (Not configured / Credentials saved / Connected / Connection failed); Test Connection disabled when fields are empty
+* UI: Budget Categories — X button fully contained within card; color swatch separated with divider and label in edit mode; Add Category form grouped into a single card with labeled color section
+
+= 1.9.50 =
+* Fix: Expenditures balanced toggle no longer zeroes amount, payee, and date — PUT endpoint now only updates fields present in the request; frontend sends full expenditure object on toggle
+
+= 1.9.49 =
+* Chore: WordPress Plugin Check — added phpcs:ignore/disable for NoCaching, UnescapedDBParameter, and InterpolatedNotPrepared in REST API; changelog trimmed
+
+= 1.9.48 =
+* Fix: Auto-Allocate Unitemized threshold showing $0.00 when option was saved as 0 in the database; now falls back to $100 if the stored value is zero or missing
+
+= 1.9.47 =
+* Refactor: replaced static inline styles across all JSX components with reusable CSS utility classes (lsfh-meta, lsfh-meta-sm, lsfh-meta-xs, lsfh-label-xs, lsfh-muted, lsfh-subtle, lsfh-bold, lsfh-primary, lsfh-nowrap, lsfh-right, lsfh-row-flex); dynamic runtime styles retained inline
+
+= 1.9.46 =
+* Feature: Auto-Allocate Unitemized — per-quarter greedy allocation that picks the smallest eligible contributions (under $100) first until the $2,000 cap is reached, marking the rest as itemized. Triggered manually via the "Auto-Allocate" button in the Transactions toolbar (visible only when a filing period is selected). Preview shown before applying.
+
+= 1.9.45 =
+* UI: Donors table — replaced separate Primary, General, and Status columns with a single Limit Remaining column showing inline progress bars (reuses dashboard styles)
+* UI: Donors table — Total Given column renamed to Total; Disbursements table column headers condensed (# Donations → Contribs., Net (Bank Deposit) → Net)
+
+= 1.9.44 =
+* UI: Dashboard balance card now shows full dollar-and-cents precision for Beginning Balance, Total Raised, Total Expenditures, and Current Balance (was rounded to whole dollars)
+
+= 1.9.43 =
+* Fix: Dashboard beginning balance now shows correct running balance when a filing period is selected and no explicit per-period balance has been set (previously always showed $0)
+
+= 1.9.42 =
+* Fix: Dashboard pending filing count now includes pending refund transactions (was incorrectly excluding negative-gross records)
+* Fix: Disbursements total net and reconciled net now computed across all pages server-side, not just the current page
+* Fix: In-Kind total value now computed across all filtered records server-side, not just the current page
+* Fix: Fee credit on refund transactions now shows correctly in the Transactions footer (was hidden when fees were negative)
+
+= 1.9.41 =
+* Fix: Disbursements fee total now includes negative fees from refund transactions, correcting the row totals
+
+= 1.9.40 =
+* Fix: Fee column now shows negative fee on refund transactions (was hidden because check was > 0 instead of != 0)
+
+= 1.9.39 =
+* Fix: TN Report export no longer silently marks all exported donations as filed — this was causing the dashboard Pending Filing count to always show zero
+
+= 1.9.38 =
+* Fix: Expenditures total now reflects all matching records across all pages, not just the current page
+* Fix: Dashboard pending filing count now also catches donations where reporting_status is unset
+
+= 1.9.37 =
+* Fix: Refund transactions no longer counted as donations in dashboard donation count, pending count, Donors gift count, or repeat-donor filter — only positive gross_amount records are counted
+
+= 1.9.36 =
+* UI: Disbursements — Date Received column is now sortable
+* UI: In-Kind — FEC Report Date column is now sortable
+
+= 1.9.35 =
+* Feature: Payees tab — pencil icon on each row opens Edit Payee modal to correct name and address; changes apply to all expense records for that payee at once
+
+= 1.9.34 =
+* UI: Expenditures — Balanced column is now a one-click toggle (CheckCircle icon, matches Disbursements reconcile style); updates instantly without opening the edit modal
+
+= 1.9.33 =
+* UI: Detail drawers (Donations, Expenditures, In-Kind) restore backdrop-click-to-close — click outside or X to dismiss; modals remain X-only
+
+= 1.9.32 =
+* UI: Transactions filter toolbar split into two rows — search and action buttons on top, all filter dropdowns below; no more accidental wrapping
+* UI: Source filter now alphabetical (ActBlue, Cash, Check, Oath) with Manual pinned last
+* UI: Filter order corrected — Periods and Months are now adjacent, followed by Events, State, City, ZIP
+
+= 1.9.31 =
+* UI: Clicking outside a drawer, modal, or popup no longer closes it — only the X button dismisses them
+
+= 1.9.30 and earlier =
+* See plugin repository for full version history.
