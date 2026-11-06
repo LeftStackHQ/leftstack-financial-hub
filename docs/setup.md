@@ -1,4 +1,4 @@
-# First-time setup
+# Initial setup
 
 Open **Financial Hub** and choose **Settings**. You'll work through a few tabs. You can change any of this later.
 

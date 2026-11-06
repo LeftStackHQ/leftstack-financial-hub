@@ -23,7 +23,7 @@ Use this for every payment the campaign makes: printing, postage, ads, fees, and
 
 **Receipt:** upload a JPEG, PNG, or PDF, or paste a link to one (a Google Drive or Dropbox link works). Receipts are optional, but keep them.
 
-**Other:** **Paid By** is for expenses someone on the team paid out of pocket. **Filing Period** fills in from the expense date. **Balanced to Bank Statement** is ticked once you've checked it against the bank; the [bank tie-out](bank.md) can tick it for you. **Notes** are for your team and don't appear in your filed report.
+**Other:** **Paid By** is for expenses someone on the team paid out of pocket. **Filing Period** fills in from the expense date. **Balanced to Bank Statement** is ticked once you've checked it against the bank; the [bank matching](bank.md) can tick it for you. **Notes** are for your team and don't appear in your filed report.
 
 !!! tip "Write a real purpose"
     Many states reject vague descriptions such as "reimbursement" or "campaign expense". Tennessee does. Say what the money bought and for whom.

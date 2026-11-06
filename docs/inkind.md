@@ -22,7 +22,7 @@ An in-kind contribution is goods or services given to the campaign free, or for 
 
 - The dashboard adds in-kind gifts into its own **in-kind total**, separate from cash donations.
 - The **State Report** file on the Donations page doesn't include in-kind contributions. Use **Export** on the In-Kind page to download them as a CSV, and enter them in your state's report the way your state asks.
-- The Hub's contribution-limit warnings look at cash donations only. If a donor also gave in-kind, add the two together yourself when you check their limit.
+- The Hub's contribution limit warnings look at cash donations only. If a donor also gave in-kind, add the two together yourself when you check their limit.
 - On the list you can search, filter by period, choose which columns show, and use **Import** to bring in a CSV.
 
 Next: [tie your records to the bank](bank.md).

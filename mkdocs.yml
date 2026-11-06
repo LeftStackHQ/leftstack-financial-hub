@@ -42,7 +42,7 @@ nav:
   - Start here:
       - Getting started: index.md
       - Install the plugin: install.md
-      - First-time setup: setup.md
+      - Initial setup: setup.md
   - Everyday tasks:
       - Connect ActBlue: actblue.md
       - Enter a donation: donations.md

@@ -11,7 +11,7 @@
 2. Choose **Upload Plugin**, pick the zip file, and choose **Install Now**.
 3. Choose **Activate Plugin**.
 
-A **Financial Hub** item now appears in the left-hand menu.
+A **Financial Hub** item now appears in the menu on the left.
 
 !!! tip "On a WordPress network?"
     If your site is part of a multisite network, a network administrator installs the plugin and activates it for the network or for your site.
@@ -28,4 +28,4 @@ Your records are legal records, so deleting the plugin from the **Plugins** scre
 define( 'LSFH_REMOVE_DATA_ON_UNINSTALL', true );
 ```
 
-Next: [first-time setup](setup.md).
+Next: [initial setup](setup.md).

@@ -22,7 +22,7 @@ Some donors never give an occupation or employer, however many times you ask. Fo
 
 If your state shows the list of contributions it has received for a period, you can check your records against it. In **Compare with the state**:
 
-1. Save the state's list as a CSV (or tab-separated file).
+1. Save the state's list as a CSV (or tab separated file).
 2. Choose it under **The state's list**.
 3. Check which column holds the date, the amount, and the name, then choose **Compare**.
 

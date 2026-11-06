@@ -14,7 +14,7 @@ Financial Hub keeps your campaign's donations, expenses, and filing records in o
 ## The short version
 
 1. [Install the plugin](install.md).
-2. [Fill in the first-time setup](setup.md): your campaign name, starting balance, and filing periods.
+2. [Fill in the initial setup](setup.md): your campaign name, starting balance, and filing periods.
 3. [Connect ActBlue](actblue.md) if you use it, or [enter donations by hand](donations.md).
 4. Enter [expenses](expenses.md) and [in-kind gifts](inkind.md), and [tie your records to the bank](bank.md).
 5. [Check your records](before-you-file.md) and [export your state report](state-report.md) when a report is due.

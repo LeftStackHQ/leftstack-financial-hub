@@ -1,6 +1,6 @@
 # Tie your records to the bank
 
-Bank tie-out compares your bank statement with what you've entered in the Hub, line by line. It shows what matches, what's missing on either side, and which checks haven't cleared. You do it a little at a time, usually once a month.
+Bank matching compares your bank statement with what you've entered in the Hub, line by line. It shows what matches, what's missing on either side, and which checks haven't cleared. You do it a little at a time, usually once a month.
 
 !!! note "Your account number is never kept"
     You upload a CSV your bank lets you download. The file is read in your browser, and only each line's date, amount, description, and check number are sent to your site and saved. Account numbers are never stored.
@@ -32,7 +32,7 @@ Each bank line and Hub record has an arrow: green for money in, red for money ou
 
 - The first group has exactly one possible partner at the exact amount, inside the date window. Untick any you don't want, then confirm.
 - A second group adds up but involves more than one record, so look before you confirm. Tick only the ones that are right.
-- Below that are **to-do cards** for bank lines with no clear partner. Each card says what's going on and offers **Add to Hub** (to create the missing record), **Confirm this pairing**, or **Match by hand**.
+- Below that are cards for bank lines with no clear partner. Each card says what's going on and offers **Add to Hub** (to create the missing record), **Confirm this pairing**, or **Match by hand**.
 
 **Match by hand** lets you pick bank lines and Hub records and confirm that they belong together. If the totals differ, it asks why, and the reason is saved as a known difference.
 
